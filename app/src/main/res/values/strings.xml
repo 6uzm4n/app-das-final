@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">App DAS Final</string>
+    <string name="title_activity_request">RequestActivity</string>
+
+    <!-- Login/register activity -->
+    <string name="input_password">Password</string>
+    <string name="input_password_repeat">Confirm password</string>
+    <string name="input_email">Email</string>
+    <string name="log_in">Log in</string>
+    <string name="log_out">Log out</string>
+    <string name="register">Register</string>
+    <string name="register_link">Not a member? Click here to register.</string>
+    <string name="login_link">Already a member? Click here to login.</string>
+    <string name="error_empty">Field can not be empty.</string>
+    <string name="error_login">Email or password are not correct.</string>
+    <string name="error_email_format">Introduce a valid email address.</string>
+    <string name="error_email_taken">Account already exists for your email.</string>
+    <string name="error_password_format">Password must be 8 characters or longer and contain letters and numbers.</string>
+    <string name="error_password2_different">Both password fields must be the same.</string>
+
+
+    <!-- Request activity -->
+    <string name="tab_request">Request</string>
+    <string name="tab_response">Response</string>
+
+    <!-- Request fragment -->
+
+
+    <!-- Response fragment -->
+    <string name="response_code">Response code:</string>
+    <string name="response_time">Response time:</string>
+    <string name="response_headers">HEADERS: </string>
+    <string name="response_body">BODY: </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -8,14 +8,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.AppCompat">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:launchMode="singleTask">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".activities.ProjectActivity" />
+        <activity
+            android:name=".activities.RequestActivity"
+            android:label="@string/title_activity_request"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
