@@ -11,6 +11,11 @@ https://github.com/AnderRasoVazquez/android-project-manager/blob/master/app/src/
  */
 public class HTTPRequestSender {
 
+    /*
+    Link to the API documentation
+    https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST
+     */
+
     public static final String SERVER_ADDRESS = "https://api-das.herokuapp.com/api/v1/";
     public static final String URL_LOGIN = SERVER_ADDRESS + "login";
     public static final String URL_REGISTER = SERVER_ADDRESS + "users";
@@ -33,6 +38,11 @@ public class HTTPRequestSender {
         return instance;
     }
 
+    /**
+     * Sets the identification token for the current user.
+     *
+     * @param serverToken User token
+     */
     public void setServerToken(String serverToken) {
         this.serverToken = serverToken;
     }
@@ -41,6 +51,18 @@ public class HTTPRequestSender {
         return this.serverToken;
     }
 
+    /**
+     * Tries to log in using and email and password.
+     * If successful, the response will contain the user token to
+     * use in future requests:
+     * {
+     * "token": "<TOKEN>"
+     * }
+     *
+     * @param email    User email
+     * @param password User password
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder login(String email, String password) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Authorization", getBasicAuth(email, password));
@@ -58,6 +80,23 @@ public class HTTPRequestSender {
         return "Basic " + new String(authStringEnc);
     }
 
+    /**
+     * Tries to register a new user.
+     * If successful, the response will contain information
+     * about the user.
+     * {
+     * "message":"New user created!",
+     * "user":{
+     * "email":"<EMAIL>",
+     * "projects":[],
+     * "user_id":"<USER_ID>"
+     * }
+     * }
+     *
+     * @param email    User email
+     * @param password User password
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder register(String email, String password) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -81,6 +120,34 @@ public class HTTPRequestSender {
         return builder;
     }
 
+    /**
+     * Tries to get all the projects from the user whose
+     * id token has been stored.
+     * If successful, the response will contain information
+     * about the user's projects.
+     * {
+     * "projects": [
+     * {
+     * "_links": {
+     * "collection": "/api/v1/projects",
+     * "self": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b"
+     * },
+     * "name": "Pokemon API",
+     * "project_id": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
+     * "requests": [
+     * "2246053a-c226-4b23-a6ad-272c7c08223d",
+     * "827323ac-1039-44fd-b65f-1d5fd11305ed"
+     * ],
+     * "user": "6bca489e-a766-4cfa-870c-6b7090259e5b"
+     * },
+     * {
+     * ...
+     * }
+     * ]
+     * }
+     *
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder getProjects() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -93,6 +160,30 @@ public class HTTPRequestSender {
         return builder;
     }
 
+    /**
+     * Tries to get a project from the user whose
+     * id token has been stored.
+     * If successful, the response will contain information
+     * about the project.
+     * {
+     * "project": {
+     * "_links": {
+     * "collection": "/api/v1/projects",
+     * "self": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b"
+     * },
+     * "name": "Pokemon API",
+     * "project_id": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
+     * "requests": [
+     * "2246053a-c226-4b23-a6ad-272c7c08223d",
+     * "827323ac-1039-44fd-b65f-1d5fd11305ed"
+     * ],
+     * "user": "6bca489e-a766-4cfa-870c-6b7090259e5b"
+     * }
+     * }
+     *
+     * @param projectId Id of the project
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder getProject(String projectId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -105,6 +196,28 @@ public class HTTPRequestSender {
         return builder;
     }
 
+    /**
+     * Tries to create a project for the user whose
+     * id token has been stored.
+     * If successful, the response will contain information
+     * about the project.
+     * {
+     * "message": "New project created!",
+     * "project": {
+     * "_links": {
+     * "collection": "/api/v1/projects",
+     * "self": "/api/v1/projects/64862083-44ad-412c-a099-07f420ecf95a"
+     * },
+     * "name": "Proyecto",
+     * "project_id": "64862083-44ad-412c-a099-07f420ecf95a",
+     * "requests": [],
+     * "user": "30ced211-2298-47a0-a49e-aa33e68ee995"
+     * }
+     * }
+     *
+     * @param projectName Project name
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder createProject(String projectName) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -126,6 +239,29 @@ public class HTTPRequestSender {
         return builder;
     }
 
+    /**
+     * Tries to change the name a project of the user whose
+     * id token has been stored.
+     * If successful, the response will contain information
+     * about the project.
+     * {
+     * "message": "Project updated!",
+     * "project": {
+     * "_links": {
+     * "collection": "/api/v1/projects",
+     * "self": "/api/v1/projects/64862083-44ad-412c-a099-07f420ecf95a"
+     * },
+     * "name": "Nombre nuevo",
+     * "project_id": "64862083-44ad-412c-a099-07f420ecf95a",
+     * "requests": [],
+     * "user": "30ced211-2298-47a0-a49e-aa33e68ee995"
+     * }
+     * }
+     *
+     * @param projectId   Project id
+     * @param projectName Project name
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder updateProject(String projectId, String projectName) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -147,6 +283,13 @@ public class HTTPRequestSender {
         return builder;
     }
 
+    /**
+     * Tries to delete name a project of the user whose
+     * id token has been stored.
+     *
+     * @param projectId   Project id
+     * @return A String with the server's response.
+     */
     public HttpRequest.Builder deleteProject(String projectId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
