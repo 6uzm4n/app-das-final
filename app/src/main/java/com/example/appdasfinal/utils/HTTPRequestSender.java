@@ -16,14 +16,14 @@ public class HTTPRequestSender {
     https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST
      */
 
-    public static final String SERVER_ADDRESS = "https://api-das.herokuapp.com/api/v1/";
-    public static final String URL_LOGIN = SERVER_ADDRESS + "login";
-    public static final String URL_REGISTER = SERVER_ADDRESS + "users";
-    public static final String URL_GET_PROJECTS = SERVER_ADDRESS + "projects";
-    public static final String URL_GET_PROJECT = SERVER_ADDRESS + "projects/%s";
-    public static final String URL_CREATE_PROJECT = SERVER_ADDRESS + "projects";
-    public static final String URL_UPDATE_PROJECT = SERVER_ADDRESS + "projects/%s";
-    public static final String URL_DELETE_PROJECT = SERVER_ADDRESS + "projects/%s";
+    private static final String SERVER_ADDRESS = "https://api-das.herokuapp.com/api/v1/";
+    private static final String URL_LOGIN = SERVER_ADDRESS + "login";
+    private static final String URL_REGISTER = SERVER_ADDRESS + "users";
+    private static final String URL_GET_PROJECTS = SERVER_ADDRESS + "projects";
+    private static final String URL_GET_PROJECT = SERVER_ADDRESS + "projects/%s";
+    private static final String URL_CREATE_PROJECT = SERVER_ADDRESS + "projects";
+    private static final String URL_UPDATE_PROJECT = SERVER_ADDRESS + "projects/%s";
+    private static final String URL_DELETE_PROJECT = SERVER_ADDRESS + "projects/%s";
 
     private String serverToken = "";
 
@@ -287,7 +287,7 @@ public class HTTPRequestSender {
      * Tries to delete name a project of the user whose
      * id token has been stored.
      *
-     * @param projectId   Project id
+     * @param projectId Project id
      * @return A String with the server's response.
      */
     public HttpRequest.Builder deleteProject(String projectId) {
