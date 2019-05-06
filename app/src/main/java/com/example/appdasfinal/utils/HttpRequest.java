@@ -106,7 +106,7 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String response) {
-        System.out.println(this.statusCode + "\n" + response);
+//        System.out.println(this.statusCode + "\n" + response);
         if (this.statusCode / 100 != 2) {
             onConnectionFailure.onFailure(this.statusCode, response);
         } else {
