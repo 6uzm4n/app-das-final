@@ -58,18 +58,6 @@ public class HTTPRequestSender {
         return this.serverToken;
     }
 
-    /**
-     * Tries to log in using and email and password.
-     * If successful, the response will contain the user token to
-     * use in future requests:
-     * {
-     * "token": "<TOKEN>"
-     * }
-     *
-     * @param email    User email
-     * @param password User password
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder login(String email, String password) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Authorization", getBasicAuth(email, password));
@@ -87,23 +75,6 @@ public class HTTPRequestSender {
         return "Basic " + new String(authStringEnc);
     }
 
-    /**
-     * Tries to register a new user.
-     * If successful, the response will contain information
-     * about the user.
-     * {
-     * "message":"New user created!",
-     * "user":{
-     * "email":"<EMAIL>",
-     * "projects":[],
-     * "user_id":"<USER_ID>"
-     * }
-     * }
-     *
-     * @param email    User email
-     * @param password User password
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder register(String email, String password) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -127,34 +98,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to get all the projects from the user whose
-     * id token has been stored.
-     * If successful, the response will contain information
-     * about the user's projects.
-     * {
-     * "projects": [
-     * {
-     * "_links": {
-     * "collection": "/api/v1/projects",
-     * "self": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b"
-     * },
-     * "name": "Pokemon API",
-     * "project_id": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "requests": [
-     * "2246053a-c226-4b23-a6ad-272c7c08223d",
-     * "827323ac-1039-44fd-b65f-1d5fd11305ed"
-     * ],
-     * "user": "6bca489e-a766-4cfa-870c-6b7090259e5b"
-     * },
-     * {
-     * ...
-     * }
-     * ]
-     * }
-     *
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder getProjects() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -167,30 +110,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to get a project from the user whose
-     * id token has been stored.
-     * If successful, the response will contain information
-     * about the project.
-     * {
-     * "project": {
-     * "_links": {
-     * "collection": "/api/v1/projects",
-     * "self": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b"
-     * },
-     * "name": "Pokemon API",
-     * "project_id": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "requests": [
-     * "2246053a-c226-4b23-a6ad-272c7c08223d",
-     * "827323ac-1039-44fd-b65f-1d5fd11305ed"
-     * ],
-     * "user": "6bca489e-a766-4cfa-870c-6b7090259e5b"
-     * }
-     * }
-     *
-     * @param projectId Id of the project
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder getProject(String projectId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -203,28 +122,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to create a project for the user whose
-     * id token has been stored.
-     * If successful, the response will contain information
-     * about the project.
-     * {
-     * "message": "New project created!",
-     * "project": {
-     * "_links": {
-     * "collection": "/api/v1/projects",
-     * "self": "/api/v1/projects/64862083-44ad-412c-a099-07f420ecf95a"
-     * },
-     * "name": "Proyecto",
-     * "project_id": "64862083-44ad-412c-a099-07f420ecf95a",
-     * "requests": [],
-     * "user": "30ced211-2298-47a0-a49e-aa33e68ee995"
-     * }
-     * }
-     *
-     * @param projectName Project name
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder createProject(String projectName) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -246,29 +143,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to change the name a project of the user whose
-     * id token has been stored.
-     * If successful, the response will contain information
-     * about the project.
-     * {
-     * "message": "Project updated!",
-     * "project": {
-     * "_links": {
-     * "collection": "/api/v1/projects",
-     * "self": "/api/v1/projects/64862083-44ad-412c-a099-07f420ecf95a"
-     * },
-     * "name": "Nombre nuevo",
-     * "project_id": "64862083-44ad-412c-a099-07f420ecf95a",
-     * "requests": [],
-     * "user": "30ced211-2298-47a0-a49e-aa33e68ee995"
-     * }
-     * }
-     *
-     * @param projectId   Project id
-     * @param projectName New project name
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder updateProject(String projectId, String projectName) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -290,13 +164,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to delete a project of the user whose
-     * id token has been stored.
-     *
-     * @param projectId Project id
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder deleteProject(String projectId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -309,41 +176,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to get all the requests of a given project.
-     * If successful, the response will contain information
-     * about the project's requests.
-     * {
-     * "requests": [
-     * {
-     * "_links": {
-     * "collection": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b/requests",
-     * "self": "/api/v1/requests/2246053a-c226-4b23-a6ad-272c7c08223d"
-     * },
-     * "body": "{\"key\": \"value\"}",
-     * "headers": [
-     * {
-     * "key": "clave",
-     * "value": "value"
-     * },
-     * {
-     * "key": "otra_clave",
-     * "value": "otro_value"
-     * }
-     * ],
-     * "method": "GET",
-     * "name": "Request uno",
-     * "project": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "request_id": "2246053a-c226-4b23-a6ad-272c7c08223d",
-     * "url": "http://google.com"
-     * },
-     * {...}
-     * ]
-     * }
-     *
-     * @param projectId Project id
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder getRequests(String projectId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
@@ -356,40 +188,7 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to get a request of a given project.
-     * If successful, the response will contain information
-     * about the request.
-     * {
-     * "request": {
-     * "_links": {
-     * "collection": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b/requests",
-     * "self": "/api/v1/requests/2246053a-c226-4b23-a6ad-272c7c08223d"
-     * },
-     * "body": "{\"key\": \"value\"}",
-     * "headers": [
-     * {
-     * "key": "clave",
-     * "value": "value"
-     * },
-     * {
-     * "key": "otra_clave",
-     * "value": "otro_value"
-     * }
-     * ],
-     * "method": "GET",
-     * "name": "Request uno",
-     * "project": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "request_id": "2246053a-c226-4b23-a6ad-272c7c08223d",
-     * "url": "http://google.com"
-     * }
-     * }
-     *
-     * @param projectId Project id
-     * @param requestId Request id
-     * @return A String with the server's response.
-     */
-    public HttpRequest.Builder getRequest(String projectId, String requestId) {
+    public HttpRequest.Builder getRequest(String requestId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
 
@@ -401,31 +200,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to create an empty request for a given project.
-     * If successful, the response will contain information
-     * about the request.
-     * {
-     * "message": "New request created!",
-     * "request": {
-     * "_links": {
-     * "collection": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b/requests",
-     * "self": "/api/v1/requests/30ee969d-3c5b-4ccb-ba7c-ad560af3ea0a"
-     * },
-     * "body": null,
-     * "headers": [],
-     * "method": null,
-     * "name": "Nueva request",
-     * "project": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "request_id": "30ee969d-3c5b-4ccb-ba7c-ad560af3ea0a",
-     * "url": null
-     * }
-     * }
-     *
-     * @param projectId   Project id
-     * @param requestName Request name
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder createRequest(String projectId, String requestName) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -447,44 +221,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to update the fields of a given request.
-     * If successful, the response will contain information
-     * about the request.
-     * {
-     * "message": "Request updated!",
-     * "project": {
-     * "_links": {
-     * "collection": "/api/v1/projects/7d5cb349-8425-4280-bd57-934d1b7cd75b/requests",
-     * "self": "/api/v1/requests/30ee969d-3c5b-4ccb-ba7c-ad560af3ea0a"
-     * },
-     * "body": "{El json a mandar}",
-     * "headers": [
-     * {
-     * "key": "LaClave",
-     * "value": "ElValor"
-     * },
-     * {
-     * "key": "OtraClave",
-     * "value": "OtroValor"
-     * }
-     * ],
-     * "method": "POST",
-     * "name": "Nuevo nombre",
-     * "project": "7d5cb349-8425-4280-bd57-934d1b7cd75b",
-     * "request_id": "30ee969d-3c5b-4ccb-ba7c-ad560af3ea0a",
-     * "url": "http://google.com"
-     * }
-     * }
-     *
-     * @param requestId      Request id
-     * @param requestName    New request name
-     * @param requestURL     New request URL
-     * @param requestBody    New request body in a json-formatted String
-     * @param requestMethod  New request method
-     * @param requestHeaders New request headers in key-value pairs
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder updateRequest(String requestId,
                                              String requestName,
                                              String requestURL,
@@ -526,13 +262,6 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    /**
-     * Tries to delete a request of the user whose
-     * id token has been stored.
-     *
-     * @param requestId Request id
-     * @return A String with the server's response.
-     */
     public HttpRequest.Builder deleteRequest(String requestId) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("x-access-token", getInstance().getServerToken());
