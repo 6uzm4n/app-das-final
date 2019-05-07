@@ -131,7 +131,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().login(email, password).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String token = jsonResponse.getString("token");
@@ -147,7 +147,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onLoginResponse(null);
@@ -171,7 +171,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().register(email, password).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             // get the success message and the user id
                             JSONObject jsonResponse = new JSONObject(response);
@@ -191,7 +191,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         try {
@@ -226,7 +226,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().getProjects().run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONArray jsonProjects = jsonResponse.getJSONArray("projects");
@@ -239,7 +239,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onGetProjectsResponse(null);
@@ -263,7 +263,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().getProject(projectId).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONObject jsonProject = jsonResponse.getJSONObject("project");
@@ -280,7 +280,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onGetProjectResponse(
@@ -306,7 +306,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().createProject(projectName).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -326,7 +326,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onCreateProjectResponse(
@@ -354,7 +354,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().updateProject(projectId, projectName).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -374,7 +374,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onUpdateProjectResponse(
@@ -399,7 +399,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().deleteProject(projectId).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -418,7 +418,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onDeleteProjectResponse(
@@ -444,7 +444,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().getRequests(projectId).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONArray jsonRequests = jsonResponse.getJSONArray("requests");
@@ -457,7 +457,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onGetRequestsResponse(null);
@@ -480,7 +480,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().getRequest(requestId).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONObject jsonRequest = jsonResponse.getJSONObject("request");
@@ -497,7 +497,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onGetRequestResponse(
@@ -523,7 +523,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().createRequest(projectId, requestName).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -543,7 +543,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onCreateRequestResponse(
@@ -587,7 +587,7 @@ public class ServerRequestHandler {
         ).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -607,7 +607,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onUpdateRequestResponse(
@@ -632,7 +632,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().deleteRequest(requestId).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -651,7 +651,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onDeleteProjectResponse(
@@ -667,7 +667,7 @@ public class ServerRequestHandler {
         HTTPRequestSender.getInstance().customRequest(url, body, method, headers).run(
                 new OnConnectionSuccess() {
                     @Override
-                    public void onSuccess(int statusCode, String response) {
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
@@ -686,7 +686,7 @@ public class ServerRequestHandler {
                 },
                 new OnConnectionFailure() {
                     @Override
-                    public void onFailure(int statusCode, String response) {
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
                         System.out.println(statusCode);
                         System.out.println(response);
                         listener.onDeleteProjectResponse(

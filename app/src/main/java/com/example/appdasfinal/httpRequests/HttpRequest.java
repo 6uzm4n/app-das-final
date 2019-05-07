@@ -7,12 +7,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /*
 https://github.com/AnderRasoVazquez/android-project-manager/blob/master/app/src/main/java/com/example/projectmanager/utils/HttpRequest.java
 */
-public class HttpRequest extends AsyncTask<Void, Void, String> {
+public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
 
     public enum RequestMethod {
         GET("GET"), POST("POST"), PUT("PUT"), DELETE("DELETE");
@@ -39,7 +41,7 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
     private HttpRequest() { }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected Object[] doInBackground(Void... voids) {
         try {
             HttpURLConnection connection = getHttpConnection();
             connection.connect();
@@ -52,8 +54,26 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
             } else {
                 inputStream = new BufferedInputStream(connection.getErrorStream());
             }
-            String response = convertInputStreamToString(inputStream);
-            return response;
+            String responseBody = convertInputStreamToString(inputStream);
+
+            HashMap<String, String> responseHeaders = new HashMap<>();
+            Map<String, List<String>> headers = connection.getHeaderFields();
+            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                String key = entry.getKey();
+
+                StringBuilder value = new StringBuilder();
+                Iterator<String> iterator = entry.getValue().iterator();
+                while (iterator.hasNext()) {
+                    value.append(iterator.next());
+                    if (iterator.hasNext()) {
+                        value.append(", ");
+                    }
+                }
+
+                responseHeaders.put(key, value.toString());
+            }
+
+            return new Object[]{responseBody, responseHeaders};
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,12 +129,14 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String response) {
+    protected void onPostExecute(Object[] result) {
 //        System.out.println(this.statusCode + "\n" + response);
+        String response = (String) result[0];
+        HashMap<String, String> headers = (HashMap<String, String>) result[1];
         if (this.statusCode / 100 != 2) {
-            onConnectionFailure.onFailure(this.statusCode, response);
+            onConnectionFailure.onFailure(this.statusCode, response, headers);
         } else {
-            onConnectionSuccess.onSuccess(this.statusCode, response);
+            onConnectionSuccess.onSuccess(this.statusCode, response, headers);
         }
     }
 
