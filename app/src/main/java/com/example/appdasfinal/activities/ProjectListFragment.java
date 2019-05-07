@@ -199,10 +199,6 @@ public class ProjectListFragment extends Fragment {
         // TODO: Rename
     }
 
-    private void notifyEmptyField() {
-        Snackbar.make(Objects.requireNonNull(getView()), getString(R.string.error_empty_field), Snackbar.LENGTH_LONG).show();
-    }
-
     public interface ProjectClickListener {
         void onProjectClicked(String id);
     }
