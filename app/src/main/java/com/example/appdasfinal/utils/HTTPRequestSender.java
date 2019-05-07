@@ -273,4 +273,34 @@ public class HTTPRequestSender {
 
         return builder;
     }
+
+    public HttpRequest.Builder customRequest(String method, String url, String body, HashMap<String, String> headers) {
+        JSONObject data;
+        try {
+            if (body != null) {
+                data = new JSONObject(body);
+            } else {
+                data = null;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        HttpRequest.RequestMethod requestMethod;
+        try {
+            requestMethod = HttpRequest.RequestMethod.valueOf(method.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        HttpRequest.Builder builder = new HttpRequest.Builder();
+        builder.setUrl(url)
+                .setBody(data)
+                .setRequestMethod(requestMethod)
+                .setHeaders(headers);
+
+        return builder;
+    }
 }

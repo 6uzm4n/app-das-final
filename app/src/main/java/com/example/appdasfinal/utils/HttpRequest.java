@@ -79,7 +79,6 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 
         HttpURLConnection connection = (HttpURLConnection)
                                                url.openConnection();
-        connection.setRequestMethod(method.getValue());
 
         connection.setReadTimeout(30000);
         connection.setConnectTimeout(30000);
@@ -100,6 +99,10 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
             wr.flush();
             wr.close();
         }
+
+        // poner el método después del cuerpo para que
+        // no se sobreescriba a post automáticamente
+        connection.setRequestMethod(method.getValue());
 
         return connection;
     }
