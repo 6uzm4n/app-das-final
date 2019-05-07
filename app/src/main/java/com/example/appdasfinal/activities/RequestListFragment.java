@@ -69,6 +69,11 @@ public class RequestListFragment extends Fragment {
 
                 listener.onRequestClicked(name);
             }
+
+            @Override
+            public void onItemLongClick(int pos) {
+                System.out.println("REQUEST");
+            }
         });
 
         return view;

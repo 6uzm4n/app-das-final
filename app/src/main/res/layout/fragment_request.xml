@@ -70,6 +70,17 @@
             app:layout_constraintStart_toStartOf="@+id/textView_method_info"
             app:layout_constraintTop_toBottomOf="@+id/textView_method_info" />
 
+        <LinearLayout
+            android:id="@+id/linearLayout_headers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView_headers_info"
+            app:layout_constraintTop_toBottomOf="@+id/textView_headers_info"></LinearLayout>
+
         <TextView
             android:id="@+id/textView_body_info"
             android:layout_width="wrap_content"
@@ -78,10 +89,10 @@
             android:text="@string/request_body"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textView_headers_info"
-            app:layout_constraintTop_toBottomOf="@+id/textView_headers_info" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout_headers" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/editText_body"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginStart="16dp"
@@ -96,6 +107,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_body_info"
             app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/buttonAddHeader"
+            android:layout_width="46dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="8dp"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_headers_info"
+            app:layout_constraintStart_toEndOf="@+id/textView_headers_info"
+            app:layout_constraintTop_toTopOf="@+id/textView_headers_info" />
 
 
     </android.support.constraint.ConstraintLayout>

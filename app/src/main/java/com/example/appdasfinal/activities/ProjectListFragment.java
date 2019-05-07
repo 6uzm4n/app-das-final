@@ -30,6 +30,7 @@ public class ProjectListFragment extends Fragment {
     }
 
     RecyclerView projectsRecycler;
+    ProjectRVAdapter projectRVAdapter;
 
 
     public ProjectListFragment() {
@@ -50,7 +51,7 @@ public class ProjectListFragment extends Fragment {
 
         projectsRecycler = view.findViewById(R.id.recyclerview_projects);
 
-        ProjectRVAdapter projectRVAdapter = new ProjectRVAdapter(projects);
+        projectRVAdapter = new ProjectRVAdapter(projects);
         projectsRecycler.setAdapter(projectRVAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -68,6 +69,13 @@ public class ProjectListFragment extends Fragment {
 
                 listener.onProjectClicked(id);
             }
+
+            @Override
+            public void onItemLongClick(int pos) {
+                System.out.println("PROJECT");
+            }
+
+
         });
 
         return view;

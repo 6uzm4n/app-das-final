@@ -20,6 +20,7 @@ public class RequestRVAdapter extends RecyclerView.Adapter<RequestRVAdapter.Proj
 
     public interface OnItemClickListener {
         void onItemClick(int pos);
+        void onItemLongClick(int pos);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -77,6 +78,21 @@ public class RequestRVAdapter extends RecyclerView.Adapter<RequestRVAdapter.Proj
                         }
                     }
                 }
+            });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemLongClick(position);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
             });
         }
     }
