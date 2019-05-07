@@ -18,13 +18,24 @@
     <string name="error_password_format">Password must be 8 characters or longer and contain letters and numbers.</string>
     <string name="error_password2_different">Both password fields must be the same.</string>
 
+    <!-- List activity -->
+    <string name="image_send_description">Send the request.</string>
 
     <!-- Request activity -->
     <string name="tab_request">Request</string>
     <string name="tab_response">Response</string>
 
     <!-- Request fragment -->
-
+    <string name="request_url">URL:</string>
+    <string name="request_method">Method:</string>
+    <string name="request_body">BODY:</string>
+    <string name="request_headers">HEADERS:</string>
+    <string-array name="request_method_list">
+        <item>GET</item>
+        <item>POST</item>
+        <item>PUT</item>
+        <item>DELETE</item>
+    </string-array>
 
     <!-- Response fragment -->
     <string name="response_code">Response code:</string>

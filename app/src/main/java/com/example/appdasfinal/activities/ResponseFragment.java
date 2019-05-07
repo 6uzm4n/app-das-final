@@ -3,6 +3,7 @@ package com.example.appdasfinal.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,9 +14,9 @@ import android.widget.TextView;
 
 import com.example.appdasfinal.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import java.util.Objects;
+
+
 public class ResponseFragment extends Fragment {
 
     private Drawable arrowUp;
@@ -38,12 +39,13 @@ public class ResponseFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("ON CREATE VIEW" + this.getClass().getName());
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_response, container, false);
 
-        arrowUp = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_drop_up);
-        arrowDown = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_drop_down);
+        arrowDown = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_arrow_drop_down);
+        arrowUp = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_arrow_drop_up);
 
         textViewHeaders = view.findViewById(R.id.textView_headers);
         textViewHeadersTitle = view.findViewById(R.id.textView_headers_title);
@@ -63,7 +65,6 @@ public class ResponseFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
         return view;
     }
 
