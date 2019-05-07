@@ -1,4 +1,4 @@
-package com.example.appdasfinal.utils;
+package com.example.appdasfinal.httpRequests;
 
 import org.json.JSONArray;
 import org.json.JSONException;

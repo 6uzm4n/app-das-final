@@ -1,4 +1,4 @@
-package com.example.appdasfinal.utils;
+package com.example.appdasfinal.httpRequests;
 
 import android.os.AsyncTask;
 import org.json.JSONObject;
@@ -102,6 +102,7 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 
         // poner el método después del cuerpo para que
         // no se sobreescriba a post automáticamente
+        // por añadir un cuerpo
         connection.setRequestMethod(method.getValue());
 
         return connection;

@@ -1,4 +1,4 @@
-package com.example.appdasfinal.utils;
+package com.example.appdasfinal.httpRequests;
 
 import android.util.Base64;
 import org.json.JSONArray;
