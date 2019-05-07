@@ -19,6 +19,15 @@
     <string name="error_password2_different">Both password fields must be the same.</string>
 
     <!-- List activity -->
+    <string name="dialog_edit">Rename</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_edit_title">Enter the new name</string>
+    <string name="dialog_edit_save">Save</string>
+    <string name="dialog_edit_discard">Cancel</string>
+    <string name="dialog_create_project_title">Enter the project name</string>
+    <string name="dialog_create_request_title">Enter the request name</string>
+    <string name="dialog_create_save">Create</string>
+    <string name="dialog_create_discard">Cancel</string>
     <string name="image_send_description">Send the request.</string>
 
     <!-- Request activity -->
@@ -43,6 +52,7 @@
     <string name="response_headers">HEADERS: </string>
     <string name="response_body">BODY: </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Errors -->
+    <string name="error_empty_field">The field can not be empty.</string>
+    <string name="error_internet_connection">Can not access the server. Check your internet connection.</string>
 </resources>
