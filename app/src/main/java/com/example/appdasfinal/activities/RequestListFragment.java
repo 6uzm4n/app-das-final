@@ -16,12 +16,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.appdasfinal.R;
+import com.example.appdasfinal.httpRequests.HTTPRequestSender;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.utils.ErrorNotifier;
+import com.example.appdasfinal.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 
 public class RequestListFragment extends Fragment implements ServerRequestHandler.ServerRequestHandlerListener {
@@ -126,7 +130,10 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
                 switch (which) {
                     case 0:
                         try {
-                            alertDialogRename(requests.getJSONObject(pos).getString("name"), requests.getJSONObject(pos).getString("request_id"));
+                            System.out.println("RRRRRRRRRRR");
+                            System.out.println(requests.getJSONObject(pos));
+                            System.out.println("RRRRRRRRRRR");
+                            alertDialogRename(requests.getJSONObject(pos));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -144,9 +151,13 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.create().show();
     }
 
-    private void alertDialogRename(String name, String id) {
+    private void alertDialogRename(JSONObject request) {
         final EditText edittext = new EditText(getContext());
-        edittext.setText(name);
+        try {
+            edittext.setText(request.getString("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setTitle(getString(R.string.dialog_edit_title));
         dialogBuilder.setView(edittext);
@@ -158,7 +169,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
                 if (newName.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
-                    renameRequest(id, newName);
+                    renameRequest(request, newName);
                 }
             }
         });
@@ -225,8 +236,36 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         }
     }
 
-    private void renameRequest(String id, String newName) {
-        // TODO: Rename
+    private void renameRequest(JSONObject request, String newName) {
+        String requestId = null;
+        String method = null;
+        String body = null;
+        String url = null;
+        HashMap<String, String> headers = new HashMap<>();
+        try {
+            requestId = request.getString("request_id");
+            url = request.getString("url");
+            body = request.getString("body");
+            method = request.getString("method");
+            JSONArray headersJSON = request.getJSONArray("headers");
+            for (int i = 0; i < headersJSON.length(); i++) {
+                headers.put(headersJSON.getJSONObject(i).getString("key"), headersJSON.getJSONObject(i).getString("value"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (Utils.requireNotNull(requestId, newName, url, body, method, headers)) {
+            ServerRequestHandler.updateRequest(requestId, newName, url, body, method, headers, this);
+        }
+    }
+
+    @Override
+    public void onUpdateRequestResponse(String message, JSONObject jsonRequest) {
+        if (jsonRequest != null) {
+            fetchRequests();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
+        }
     }
 
     // TODO: Rename listener
