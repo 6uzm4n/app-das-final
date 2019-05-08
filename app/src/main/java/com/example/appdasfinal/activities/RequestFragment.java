@@ -9,25 +9,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.appdasfinal.R;
 
-import org.w3c.dom.Text;
-
 public class RequestFragment extends Fragment {
-
 
     public RequestFragment() {
         // Required empty public constructor
     }
 
+    private LinearLayout list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_request, container, false);
 
-        final LinearLayout list = view.findViewById(R.id.linearLayout_headers);
+        list = view.findViewById(R.id.linearLayout_headers);
         Button button = view.findViewById(R.id.buttonAddHeader);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
