@@ -11,103 +11,190 @@ public class ServerRequestHandler {
     public interface ServerRequestHandlerListener {
 
         /**
-         * Called when the login request has been completed.
+         * Called when the login request has been completed successfully.
          *
-         * @param token User token returned by the server. Null if any problems occurred
+         * @param token User token returned by the server
          */
-        default void onLoginResponse(String token) {}
+        default void onLoginSuccess(String token) {}
 
         /**
-         * Called when the register request has been completed.
+         * Called when the login request has failed.
          *
-         * @param message Message returned by the server. Indicates success of cause of error
-         * @param userId  User id returned by the server. Null if the registration was not successful
+         * @param errorMessage Error message returned by the server
          */
-        default void onRegisterResponse(String message, String userId) {}
+        default void onLoginFailure(String errorMessage) {}
 
         /**
-         * Called when the get projects request has been completed.
+         * Called when the register request has been completed successfully.
          *
-         * @param jsonProjects List of the projects returned by the server. Null if any problems occurred.
+         * @param message Message returned by the server
+         * @param userId  User id returned by the server
+         */
+        default void onRegisterSuccess(String message, String userId) {}
+
+        /**
+         * Called when the register request has failed.
+         *
+         * @param message Message returned by the server
+         */
+        default void onRegisterFailure(String message) {}
+
+        /**
+         * Called when the get projects request has been completed successfully.
+         *
+         * @param jsonProjects List of the projects returned by the server.
          *                     Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#obtener-todos-los-proyectos-del-usuario
          */
-        default void onGetProjectsResponse(JSONArray jsonProjects) {}
+        default void onGetProjectsSuccess(JSONArray jsonProjects) {}
 
         /**
-         * Called when the get project request has been completed.
+         * Called when the get projects request has failed.
          *
-         * @param jsonProject Project returned by the server. Null if any problems occurred.
+         * @param message List Message returned by the server
+         */
+        default void onGetProjectsFailure(String message) {}
+
+        /**
+         * Called when the get project request has been completed successfully.
+         *
+         * @param jsonProject Project returned by the server.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#obtener-un-proyecto
          */
-        default void onGetProjectResponse(JSONObject jsonProject) {}
+        default void onGetProjectSuccess(JSONObject jsonProject) {}
 
         /**
-         * Called when the create project request has been completed.
+         * Called when the get project request has failed.
          *
-         * @param message     Message returned by the server. Indicates success of cause of error
-         * @param jsonProject Project data returned by the server. Null if any problems occurred.
+         * @param message List Message returned by the server
+         */
+        default void onGetProjectFailure(String message) {}
+
+        /**
+         * Called when the create project request has been completed successfully.
+         *
+         * @param message     Message returned by the server
+         * @param jsonProject Project data returned by the server.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#crear-un-proyecto
          */
-        default void onCreateProjectResponse(String message, JSONObject jsonProject) {}
+        default void onCreateProjectSuccess(String message, JSONObject jsonProject) {}
 
         /**
-         * Called when the update project request has been completed.
+         * Called when the create project request has failed.
          *
-         * @param message     Message returned by the server. Indicates success of cause of error
-         * @param jsonProject Project data returned by the server. Null if any problems occurred.
+         * @param message Message returned by the server
+         */
+        default void onCreateProjectFailure(String message) {}
+
+        /**
+         * Called when the update project request has been completed successfully.
+         *
+         * @param message     Message returned by the server
+         * @param jsonProject Project data returned by the server.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#modificar-un-proyecto
          */
-        default void onUpdateProjectResponse(String message, JSONObject jsonProject) {}
+        default void onUpdateProjectSuccess(String message, JSONObject jsonProject) {}
 
         /**
-         * Called when the update project request has been completed.
+         * Called when the update project request has failed.
          *
-         * @param message Message returned by the server. Indicates success of cause of error
-         * @param success Boolean indicating the success of the operation
+         * @param message Message returned by the server
          */
-        default void onDeleteProjectResponse(String message, boolean success) {}
+        default void onUpdateProjectFailure(String message) {}
 
         /**
-         * Called when the get requests request has been completed.
+         * Called when the update project request has been completed successfully.
          *
-         * @param jsonRequests List of the requests returned by the server. Null if any problems occurred.
+         * @param message Message returned by the server
+         */
+        default void onDeleteProjectSuccess(String message) {}
+
+        /**
+         * Called when the update project request has failed.
+         *
+         * @param message Message returned by the server
+         */
+        default void onDeleteProjectFailure(String message) {}
+
+        /**
+         * Called when the get requests request has been completed successfully.
+         *
+         * @param jsonRequests List of the requests returned by the server.
          *                     Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#obtener-todas-las-requests-de-un-proyecto
          */
-        default void onGetRequestsResponse(JSONArray jsonRequests) {}
+        default void onGetRequestsSuccess(JSONArray jsonRequests) {}
 
         /**
-         * Called when the get request request has been completed.
+         * Called when the get requests request has failed.
          *
-         * @param jsonRequest Request returned by the server. Null if any problems occurred.
+         * @param message Message returned by the server
+         */
+        default void onGetRequestsFailure(String message) {}
+
+        /**
+         * Called when the get request request has been completed successfully.
+         *
+         * @param jsonRequest Request returned by the server.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#obtener-una-sola-request
          */
-        default void onGetRequestResponse(JSONObject jsonRequest) {}
+        default void onGetRequestSuccess(JSONObject jsonRequest) {}
 
         /**
-         * Called when the create request request has been completed.
+         * Called when the get request request has failed.
          *
-         * @param message     Message returned by the server. Indicates success of cause of error
+         * @param message Message returned by the server
+         */
+        default void onGetRequestFailure(String message) {}
+
+        /**
+         * Called when the create request request has been completed successfully.
+         *
+         * @param message     Message returned by the server
          * @param jsonRequest Project data returned by the server. Null if any problems occurred.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#crear-una-request
          */
-        default void onCreateRequestResponse(String message, JSONObject jsonRequest) {}
+        default void onCreateRequestSuccess(String message, JSONObject jsonRequest) {}
 
         /**
-         * Called when the update request request has been completed.
+         * Called when the create request request has failed.
          *
-         * @param message     Message returned by the server. Indicates success of cause of error
-         * @param jsonRequest Project data returned by the server. Null if any problems occurred.
+         * @param message Message returned by the server
+         */
+        default void onCreateRequestFailure(String message) {}
+
+        /**
+         * Called when the update request request has been completed successfully.
+         *
+         * @param message     Message returned by the server
+         * @param jsonRequest Project data returned by the server.
          *                    Structure: https://github.com/AnderRasoVazquez/api-das-final/wiki/Documentaci%C3%B3n-API-REST#modificar-una-request
          */
-        default void onUpdateRequestResponse(String message, JSONObject jsonRequest) {}
+        default void onUpdateRequestSuccess(String message, JSONObject jsonRequest) {}
 
         /**
-         * Called when the update request request has been completed.
+         * Called when the update request request has failed.
          *
-         * @param message Message returned by the server. Indicates success of cause of error
-         * @param success Boolean indicating the success of the operation
+         * @param message     Message returned by the server
          */
-        default void onDeleteRequestResponse(String message, boolean success) {}
+        default void onUpdateRequestFailure(String message) {}
+
+        /**
+         * Called when the update request request has been completed successfully.
+         *
+         * @param message Message returned by the server
+         */
+        default void onDeleteRequestSuccess(String message) {}
+
+        /**
+         * Called when the update request request has failed.
+         *
+         * @param message Message returned by the server
+         */
+        default void onDeleteRequestFailure(String message) {}
+
+        /**
+         * Called when the connection could no be established.
+         */
+        default void onNoConnection() {}
     }
 
     public static void login(String email, String password, ServerRequestHandlerListener listener) {
@@ -138,19 +225,29 @@ public class ServerRequestHandler {
                             if (saveToken) {
                                 HTTPRequestSender.getInstance().setServerToken(token);
                             }
-                            listener.onLoginResponse(token);
+                            listener.onLoginSuccess(token);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onLoginResponse(null);
+                            listener.onLoginFailure("Unexpected error");
                         }
                     }
                 },
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onLoginResponse(null);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onLoginFailure(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onLoginFailure("Unexpected error");
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -177,15 +274,15 @@ public class ServerRequestHandler {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                             String userId = jsonResponse.getJSONObject("user").getString("user_id");
-                            listener.onRegisterResponse(
+                            listener.onRegisterSuccess(
                                     message,
                                     userId
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onRegisterResponse(
-                                    "Unexpected error",
-                                    null);
+                            listener.onRegisterFailure(
+                                    "Unexpected error"
+                            );
                         }
                     }
                 },
@@ -198,15 +295,20 @@ public class ServerRequestHandler {
                             // get the error message
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
-                            listener.onRegisterResponse(
-                                    message,
-                                    null);
+                            listener.onRegisterFailure(
+                                    message
+                            );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onRegisterResponse(
-                                    "Unexpected error",
-                                    null);
+                            listener.onRegisterFailure(
+                                    "Unexpected error"
+                            );
                         }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -230,19 +332,29 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONArray jsonProjects = jsonResponse.getJSONArray("projects");
-                            listener.onGetProjectsResponse(jsonProjects);
+                            listener.onGetProjectsSuccess(jsonProjects);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onGetProjectsResponse(null);
+                            listener.onGetProjectsFailure("Unexpected error");
                         }
                     }
                 },
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onGetProjectsResponse(null);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onGetProjectsFailure(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onGetProjectsFailure("Unexpected error");
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -267,25 +379,31 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONObject jsonProject = jsonResponse.getJSONObject("project");
-                            listener.onGetProjectResponse(
+                            listener.onGetProjectSuccess(
                                     jsonProject
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onGetProjectResponse(
-                                    null
-                            );
+                            listener.onGetProjectFailure("Unexpected error");
                         }
                     }
                 },
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onGetProjectResponse(
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onGetProjectFailure(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onGetProjectFailure("Unexpected error");
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -311,15 +429,14 @@ public class ServerRequestHandler {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                             JSONObject jsonProject = jsonResponse.getJSONObject("project");
-                            listener.onCreateProjectResponse(
+                            listener.onCreateProjectSuccess(
                                     message,
                                     jsonProject
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onCreateProjectResponse(
-                                    "Unexpected error",
-                                    null
+                            listener.onCreateProjectFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -327,12 +444,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onCreateProjectResponse(
-                                "Unexpected error",
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onCreateProjectFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onCreateProjectFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -359,15 +487,14 @@ public class ServerRequestHandler {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                             JSONObject jsonProject = jsonResponse.getJSONObject("project");
-                            listener.onUpdateProjectResponse(
+                            listener.onUpdateProjectSuccess(
                                     message,
                                     jsonProject
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onUpdateProjectResponse(
-                                    "Unexpected error",
-                                    null
+                            listener.onUpdateProjectFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -375,12 +502,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onUpdateProjectResponse(
-                                "Unexpected error",
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onUpdateProjectFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onUpdateProjectFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -403,15 +541,13 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
-                            listener.onDeleteProjectResponse(
-                                    message,
-                                    true
+                            listener.onDeleteProjectSuccess(
+                                    message
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onDeleteProjectResponse(
-                                    "Unexpected error",
-                                    false
+                            listener.onDeleteProjectFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -419,12 +555,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onDeleteProjectResponse(
-                                "Unexpected error",
-                                false
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onDeleteProjectFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onDeleteProjectFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -448,19 +595,33 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONArray jsonRequests = jsonResponse.getJSONArray("requests");
-                            listener.onGetRequestsResponse(jsonRequests);
+                            listener.onGetRequestsSuccess(jsonRequests);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onGetRequestsResponse(null);
+                            listener.onGetRequestsFailure(
+                                    "Unexpected error"
+                            );
                         }
                     }
                 },
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onGetRequestsResponse(null);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onGetRequestsFailure(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onGetRequestsFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -484,13 +645,13 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONObject jsonRequest = jsonResponse.getJSONObject("request");
-                            listener.onGetRequestResponse(
+                            listener.onGetRequestSuccess(
                                     jsonRequest
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onGetRequestResponse(
-                                    null
+                            listener.onGetRequestFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -498,11 +659,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onGetRequestResponse(
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onGetRequestFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onGetRequestFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -528,15 +701,14 @@ public class ServerRequestHandler {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                             JSONObject jsonRequest = jsonResponse.getJSONObject("request");
-                            listener.onCreateRequestResponse(
+                            listener.onCreateRequestSuccess(
                                     message,
                                     jsonRequest
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onCreateRequestResponse(
-                                    "Unexpected error",
-                                    null
+                            listener.onCreateRequestFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -544,12 +716,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onCreateRequestResponse(
-                                "Unexpected error",
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onCreateRequestFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onCreateRequestFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -592,15 +775,14 @@ public class ServerRequestHandler {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
                             JSONObject jsonRequest = jsonResponse.getJSONObject("request");
-                            listener.onUpdateRequestResponse(
+                            listener.onUpdateRequestSuccess(
                                     message,
                                     jsonRequest
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onUpdateRequestResponse(
-                                    "Unexpected error",
-                                    null
+                            listener.onUpdateRequestFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -608,12 +790,23 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onUpdateRequestResponse(
-                                "Unexpected error",
-                                null
-                        );
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onUpdateRequestFailure(
+                                    message
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onUpdateRequestFailure(
+                                    "Unexpected error"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
@@ -636,15 +829,13 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
-                            listener.onDeleteRequestResponse(
-                                    message,
-                                    true
+                            listener.onDeleteRequestSuccess(
+                                    message
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onDeleteRequestResponse(
-                                    "Unexpected error",
-                                    false
+                            listener.onDeleteRequestFailure(
+                                    "Unexpected error"
                             );
                         }
                     }
@@ -652,49 +843,17 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onDeleteProjectResponse(
-                                "Unexpected error",
-                                false
+                        listener.onDeleteProjectFailure(
+                                "Unexpected error"
                         );
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
                     }
                 }
         );
     }
 
-    public static void customRequest(String url, String body, String method, HashMap<String, String> headers, ServerRequestHandlerListener listener) {
-        HTTPRequestSender.getInstance().customRequest(url, body, method, headers).run(
-                new OnConnectionSuccess() {
-                    @Override
-                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            String message = jsonResponse.getString("message");
-                            listener.onDeleteProjectResponse(
-                                    message,
-                                    true
-                            );
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            listener.onDeleteProjectResponse(
-                                    "Unexpected error",
-                                    false
-                            );
-                        }
-                    }
-                },
-                new OnConnectionFailure() {
-                    @Override
-                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
-                        listener.onDeleteProjectResponse(
-                                "Unexpected error",
-                                false
-                        );
-                    }
-                }
-        );
-    }
 }
