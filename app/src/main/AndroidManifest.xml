@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.appdasfinal">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ListActivity"></activity>
         <activity
-            android:name=".activities.LoginActivity"
-            android:launchMode="singleTask">
+            android:name=".activities.SplashScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +22,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".activities.RegisterActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".activities.ProjectActivity" />
+        <activity android:name=".activities.ListActivity" />
         <activity
             android:name=".activities.RequestActivity"
             android:label="@string/title_activity_request"

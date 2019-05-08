@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.appdasfinal.R;
+import com.example.appdasfinal.httpRequests.ServerRequestHandler;
+import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements ServerRequestHandler.ServerRequestHandlerListener {
 
     private TextInputLayout inputEmail;
     private TextInputLayout inputPassword;
@@ -41,18 +43,27 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateRegister()){
-                    finish();
+                    ServerRequestHandler.register(getEmail(), getPassword(), RegisterActivity.this);
                 }
             }
         });
 
     }
 
+    @Override
+    public void onRegisterResponse(String message, String userId) {
+        System.out.println(userId);
+        if (userId != null) {
+            finish();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
+        }
+    }
+
     private boolean validateRegister() {
         if (!validateEmail() | !validatePassword() | !validatePassword2()) {
             return false;
         }
-        // TODO: Registrarse en servidor
         return true;
     }
 

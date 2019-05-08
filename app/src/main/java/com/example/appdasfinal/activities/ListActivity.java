@@ -55,7 +55,7 @@ public class ListActivity extends AppCompatActivity implements ProjectListFragme
 
         requestListFragment = new RequestListFragment();
         Bundle args = new Bundle();
-        args.putString("id", id);
+        args.putString("project_id", id);
         requestListFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_requests, requestListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
 

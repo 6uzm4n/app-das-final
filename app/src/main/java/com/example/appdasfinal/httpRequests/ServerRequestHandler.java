@@ -636,13 +636,13 @@ public class ServerRequestHandler {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             String message = jsonResponse.getString("message");
-                            listener.onDeleteProjectResponse(
+                            listener.onDeleteRequestResponse(
                                     message,
                                     true
                             );
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            listener.onDeleteProjectResponse(
+                            listener.onDeleteRequestResponse(
                                     "Unexpected error",
                                     false
                             );

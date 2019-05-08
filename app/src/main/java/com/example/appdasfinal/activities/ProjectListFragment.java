@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,22 +16,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.appdasfinal.R;
+import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
-public class ProjectListFragment extends Fragment {
+public class ProjectListFragment extends Fragment implements ServerRequestHandler.ServerRequestHandlerListener {
 
     JSONArray projects;
     ProjectClickListener listener;
 
     {
         try {
-            projects = new JSONArray("[{id: '1', name: 'name1'}, {id: '2', name: 'name2'}, {id: '3', name: 'name3'}]");
+            projects = new JSONArray("[]");
+//            projects = new JSONArray("[{project_id: '1', name: 'name1'}, {project_id: '2', name: 'name2'}, {project_id: '3', name: 'name3'}]");
+//            projects = new JSONArray("[{'_links':{},'name':'Pokemon PPP','project_id':'3bfc4181-ebc8-4f74-b9ec-d1bdaaf70904','requests':['89a1ece3-35ee-40dd-958a-962c0488879b','92802974-a38d-4969-9957-a0760777803c'],'user':'db02901d-f91b-4a21-9a1e-2b4249bdca73'},{'_links':{},'name':'Otra API','project_id':'33114a4c-bb66-437a-b859-f88754caff98','requests':[],'user':'db02901d-f91b-4a21-9a1e-2b4249bdca73'}]");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -60,18 +60,50 @@ public class ProjectListFragment extends Fragment {
 
         projectsRecycler = view.findViewById(R.id.recyclerview_projects);
 
-        projectRVAdapter = new ProjectRVAdapter(projects);
-        projectsRecycler.setAdapter(projectRVAdapter);
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_project);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialogCreate();
+            }
+        });
 
+        fetchProjects();
+
+        return view;
+    }
+
+    private void fetchProjects() {
+        ServerRequestHandler.getProjects(this);
+    }
+
+    @Override
+    public void onGetProjectsResponse(JSONArray jsonProjects) {
+//        for (int i = 0; i < jsonProjects.length(); i++) {
+//            try {
+//                projects.put(jsonProjects.getJSONObject(i));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        projects = jsonProjects;
+//        projectRVAdapter.notifyDataSetChanged();
+        updateProjectList();
+    }
+
+    private void updateProjectList() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         projectsRecycler.setLayoutManager(linearLayoutManager);
+
+        projectRVAdapter = new ProjectRVAdapter(projects);
+        projectsRecycler.setAdapter(projectRVAdapter);
 
         projectRVAdapter.setOnItemClickListener(new ProjectRVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
                 String id = null;
                 try {
-                    id = projects.getJSONObject(pos).getString("id");
+                    id = projects.getJSONObject(pos).getString("project_id");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -81,24 +113,18 @@ public class ProjectListFragment extends Fragment {
 
             @Override
             public void onItemLongClick(int pos) {
-                alertDialogAction();
+                System.out.println("*************");
+                System.out.println(pos);
+                System.out.println(projects);
+                System.out.println("*************");
+                alertDialogAction(pos);
             }
 
 
         });
-
-        FloatingActionButton fab = view.findViewById(R.id.fab_add_project);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialogCreate();
-            }
-        });
-
-        return view;
     }
 
-    private void alertDialogAction() {
+    private void alertDialogAction(int pos) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         CharSequence[] options = {getString(R.string.dialog_edit), getString(R.string.dialog_delete)};
         dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
@@ -107,14 +133,14 @@ public class ProjectListFragment extends Fragment {
                 switch (which) {
                     case 0:
                         try {
-                            alertDialogRename(projects.getJSONObject(which).getString("id"));
+                            alertDialogRename(projects.getJSONObject(pos).getString("name"), projects.getJSONObject(pos).getString("project_id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         break;
                     case 1:
                         try {
-                            deleteProject(projects.getJSONObject(which).getString("id"));
+                            deleteProject(projects.getJSONObject(pos).getString("project_id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -125,8 +151,9 @@ public class ProjectListFragment extends Fragment {
         dialogBuilder.create().show();
     }
 
-    private void alertDialogRename(String id) {
+    private void alertDialogRename(String name, String id) {
         final EditText edittext = new EditText(getContext());
+        edittext.setText(name);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setTitle(getString(R.string.dialog_edit_title));
 
@@ -165,7 +192,7 @@ public class ProjectListFragment extends Fragment {
                 if (name.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
-                    addProject(edittext.getText().toString());
+                    createProject(edittext.getText().toString());
                 }
             }
         });
@@ -179,29 +206,47 @@ public class ProjectListFragment extends Fragment {
         dialogBuilder.create().show();
     }
 
-    private void addProject(String name) {
-        // TODO: Add
+    private void createProject(String name) {
+        ServerRequestHandler.createProject(name, this);
+    }
 
-        // Test
-        try {
-            projects.put(new JSONObject("{id: 'AA', name: '" + name + "'}"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+    @Override
+    public void onCreateProjectResponse(String message, JSONObject jsonProject) {
+        if (jsonProject != null) {
+            fetchProjects();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
         }
     }
 
     private void deleteProject(String id) {
-        // TODO: Delete
-        projectRVAdapter.notifyDataSetChanged();
+        ServerRequestHandler.deleteProject(id, this);
+    }
+
+    @Override
+    public void onDeleteProjectResponse(String message, boolean success) {
+        if (success) {
+            fetchProjects();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
+        }
     }
 
     private void renameProject(String id, String newName) {
-        // TODO: Rename
+        ServerRequestHandler.updateProject(id, newName, this);
+    }
+
+    @Override
+    public void onUpdateProjectResponse(String message, JSONObject jsonProject) {
+        if (jsonProject != null) {
+            fetchProjects();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
+        }
     }
 
     public interface ProjectClickListener {
         void onProjectClicked(String id);
     }
-
 
 }

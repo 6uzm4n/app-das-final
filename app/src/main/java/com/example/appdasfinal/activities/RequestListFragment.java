@@ -16,20 +16,25 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.appdasfinal.R;
+import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 
-public class RequestListFragment extends Fragment {
+public class RequestListFragment extends Fragment implements ServerRequestHandler.ServerRequestHandlerListener {
+
+    String id;
 
     JSONArray requests;
     RequestClickListener listener;
 
     {
         try {
-            requests = new JSONArray("[{id: '1', name: 'name1', method: 'GET'}, {id: '2', name: 'name2', method: 'POST'}]");
+            requests = new JSONArray("[]");
+//            requests = new JSONArray("[{id: '1', name: 'name1', method: 'GET'}, {id: '2', name: 'name2', method: 'POST'}]");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -55,8 +60,37 @@ public class RequestListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_request_list, container, false);
 
+        // Get args
+        if (getArguments() != null) {
+            id = getArguments().getString("project_id");
+        }
+
         requestsRecycler = view.findViewById(R.id.recyclerview_requests);
 
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_request);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialogCreate();
+            }
+        });
+
+        fetchRequests();
+
+        return view;
+    }
+
+    private void fetchRequests() {
+        ServerRequestHandler.getRequests(id, this);
+    }
+
+    @Override
+    public void onGetRequestsResponse(JSONArray jsonRequests) {
+        requests = jsonRequests;
+        updateRequestsList();
+    }
+
+    private void updateRequestsList() {
         requestRVAdapter = new RequestRVAdapter(requests);
         requestsRecycler.setAdapter(requestRVAdapter);
 
@@ -68,7 +102,7 @@ public class RequestListFragment extends Fragment {
             public void onItemClick(int pos) {
                 String name = null;
                 try {
-                    name = requests.getJSONObject(pos).getString("name");
+                    name = requests.getJSONObject(pos).getString("request_id");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -78,22 +112,12 @@ public class RequestListFragment extends Fragment {
 
             @Override
             public void onItemLongClick(int pos) {
-                alertDialogAction();
+                alertDialogAction(pos);
             }
         });
-
-        FloatingActionButton fab = view.findViewById(R.id.fab_add_request);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialogCreate();
-            }
-        });
-
-        return view;
     }
 
-    private void alertDialogAction() {
+    private void alertDialogAction(int pos) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         CharSequence[] options = {getString(R.string.dialog_edit), getString(R.string.dialog_delete)};
         dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
@@ -102,14 +126,14 @@ public class RequestListFragment extends Fragment {
                 switch (which) {
                     case 0:
                         try {
-                            alertDialogRename(requests.getJSONObject(which).getString("id"));
+                            alertDialogRename(requests.getJSONObject(pos).getString("name"), requests.getJSONObject(pos).getString("request_id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         break;
                     case 1:
                         try {
-                            deleteRequest(requests.getJSONObject(which).getString("id"));
+                            deleteRequest(requests.getJSONObject(pos).getString("request_id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -120,8 +144,9 @@ public class RequestListFragment extends Fragment {
         dialogBuilder.create().show();
     }
 
-    private void alertDialogRename(String id) {
+    private void alertDialogRename(String name, String id) {
         final EditText edittext = new EditText(getContext());
+        edittext.setText(name);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setTitle(getString(R.string.dialog_edit_title));
         dialogBuilder.setView(edittext);
@@ -160,7 +185,7 @@ public class RequestListFragment extends Fragment {
                 if (name.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
-                    addRequest(edittext.getText().toString());
+                    createRequest(edittext.getText().toString());
                 }
             }
         });
@@ -174,18 +199,37 @@ public class RequestListFragment extends Fragment {
         dialogBuilder.create().show();
     }
 
-    private void addRequest(String name) {
-        // TODO: Add
+    private void createRequest(String name) {
+        ServerRequestHandler.createRequest(id, name, this);
+    }
+
+    @Override
+    public void onCreateRequestResponse(String message, JSONObject jsonRequest) {
+        if (jsonRequest != null) {
+            fetchRequests();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
+        }
     }
 
     private void deleteRequest(String id) {
-        // TODO: Delete
-        requestRVAdapter.notifyDataSetChanged();
+        ServerRequestHandler.deleteRequest(id, this);
+    }
+
+    @Override
+    public void onDeleteRequestResponse(String message, boolean success) {
+        if (success) {
+            fetchRequests();
+        } else {
+            ErrorNotifier.notifyInternetConnection(getView());
+        }
     }
 
     private void renameRequest(String id, String newName) {
         // TODO: Rename
     }
+
+    // TODO: Rename listener
 
     public interface RequestClickListener {
         void onRequestClicked(String id);
