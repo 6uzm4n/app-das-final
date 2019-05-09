@@ -47,6 +47,8 @@
     <string name="request_method">Method:</string>
     <string name="request_body">BODY:</string>
     <string name="request_headers">HEADERS:</string>
+    <string name="request_headers_key_hint">Key</string>
+    <string name="request_headers_value_hint">Value</string>
     <string-array name="request_method_list">
         <item>GET</item>
         <item>POST</item>
