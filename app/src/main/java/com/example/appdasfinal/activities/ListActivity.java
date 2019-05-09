@@ -116,7 +116,6 @@ public class ListActivity extends AppCompatActivity implements ProjectListFragme
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-
             }
         });
 
@@ -137,7 +136,6 @@ public class ListActivity extends AppCompatActivity implements ProjectListFragme
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 logout();
-
             }
         });
 
