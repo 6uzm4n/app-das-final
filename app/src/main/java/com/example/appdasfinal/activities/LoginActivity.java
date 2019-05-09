@@ -2,13 +2,12 @@ package com.example.appdasfinal.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
@@ -16,7 +15,7 @@ import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements ServerRequestHandlerListener {
+public class LoginActivity extends AppCompatActivity implements ServerRequestHandlerListener, Loader {
 
     TextInputLayout inputEmail;
     TextInputLayout inputPassword;
@@ -30,27 +29,23 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
         inputPassword = findViewById(R.id.textInputLayout_password);
 
         TextView registerLink = findViewById(R.id.textView_register);
-        registerLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(i);
-            }
+        registerLink.setOnClickListener(v -> {
+            Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(i);
         });
 
-        final Button loginButton = findViewById(R.id.button_login);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateLogin()){
-                    ServerRequestHandler.login(getEmail(), getPassword(), LoginActivity.this);
-                }
+        Button loginButton = findViewById(R.id.button_login);
+        loginButton.setOnClickListener(v -> {
+            if (validateLogin()) {
+                showProgress(true);
+                ServerRequestHandler.login(getEmail(), getPassword(), LoginActivity.this);
             }
         });
     }
 
     @Override
     public void onLoginSuccess(String token) {
+//        showProgress(false);
         inputEmail.setError("");
         if (token != null) {
             SharedPreferences preferences = getSharedPreferences("session", MODE_PRIVATE);
@@ -63,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
 
     @Override
     public void onLoginFailure(String message) {
+        showProgress(false);
         inputEmail.setError(getString(R.string.error_login));
     }
 
@@ -103,6 +99,17 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
 
     @Override
     public void onNoConnection() {
+        showProgress(false);
         ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
+    }
+
+    @Override
+    public View getContentView() {
+        return findViewById(R.id.scrollView_login);
+    }
+
+    @Override
+    public View getProgressBar() {
+        return findViewById(R.id.progressBar_login);
     }
 }
