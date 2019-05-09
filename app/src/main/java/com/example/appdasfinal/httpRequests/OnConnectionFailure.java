@@ -5,4 +5,6 @@ import java.util.HashMap;
 public interface OnConnectionFailure {
 
     void onFailure(int statusCode, String response, HashMap<String, String> headers);
+
+    void onNoConnection();
 }
