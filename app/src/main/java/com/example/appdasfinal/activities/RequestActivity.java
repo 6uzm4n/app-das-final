@@ -16,35 +16,40 @@ import com.example.appdasfinal.R;
 
 public class RequestActivity extends AppCompatActivity {
 
-    RequestFragment requestFragment;
-    ResponseFragment responseFragment;
+    private ViewPager viewPager;
+
+    private String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-        String id = null;
         Bundle args = getIntent().getExtras();
         if (args != null) {
-            id = args.getString("id");
+            this.id = args.getString("id");
         }
-        System.out.println("========================");
-        System.out.println("ACTIVITY " + id);
-        System.out.println("========================");
-
-        requestFragment = new RequestFragment();
-        requestFragment.setId(id);
-        responseFragment = new ResponseFragment();
 
         // Setting the tabs
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(pagerAdapter);
+
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
+
+    }
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -60,9 +65,13 @@ public class RequestActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
+                    RequestFragment requestFragment = new RequestFragment();
+                    Bundle args = new Bundle();
+                    args.putString("id", id);
+                    requestFragment.setArguments(args);
                     return requestFragment;
                 case 1:
-                    return responseFragment;
+                    return new ResponseFragment();
             }
             return null;
         }
@@ -87,7 +96,4 @@ public class RequestActivity extends AppCompatActivity {
         }
     }
 
-    public void foo() {
-        responseFragment.foo();
-    }
 }

@@ -28,16 +28,10 @@ import java.util.Map;
 
 public class RequestFragment extends Fragment implements ServerRequestHandlerListener {
 
-    String id;
-
     String url;
     String method;
     String body;
     HashMap<String, String> headers;
-
-    public RequestFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -45,11 +39,19 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_request, container, false);
 
-
-
         Button button = view.findViewById(R.id.buttonAddHeader);
         button.setOnClickListener(v -> addHeaderCardView());
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            String id = args.getString("id");
+            ServerRequestHandler.getRequest(id, this);
+        }
     }
 
     private CardView addHeaderCardView() {
@@ -75,38 +77,21 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         return headers;
     }
 
-    public void setId(String id) {
-        System.out.println("??????????????????");
-        System.out.println("ID SET " + id);
-        System.out.println("??????????????????");
-        this.id = id;
-        if (getView() != null) {
-            ServerRequestHandler.getRequest(id, this);
-        }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        System.out.println("VIEW CREATED");
-        super.onViewCreated(view, savedInstanceState);
-        if (id != null){
-            ServerRequestHandler.getRequest(id, this);
-        }
-    }
-
-    public void setValues() {
+    private void setValues() {
         TextView urlTextView = getView().findViewById(R.id.editText_url);
         urlTextView.setText(this.url);
-        Spinner spinnerMethod = getView().findViewById(R.id.spinner_method);
-        for (int i=0;i<spinnerMethod.getCount();i++){
-            if (spinnerMethod.getItemAtPosition(i).toString().equals(method)){
-                spinnerMethod.setSelection(i);
+
+        Spinner methodSpinner = getView().findViewById(R.id.spinner_method);
+        for (int i = 0; i < methodSpinner.getCount(); i++) {
+            if (methodSpinner.getItemAtPosition(i).toString().equals(this.method)) {
+                methodSpinner.setSelection(i);
                 break;
             }
         }
-        urlTextView.setText(this.url);
+
         TextView bodyTextView = getView().findViewById(R.id.editText_body);
         bodyTextView.setText(this.body);
+
         for (Map.Entry<String, String> entries : this.headers.entrySet()) {
             CardView headerCardView = addHeaderCardView();
             ((TextView) headerCardView.findViewById(R.id.editText_header_key)).setText(entries.getKey());
@@ -116,9 +101,6 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
     @Override
     public void onGetRequestSuccess(JSONObject jsonRequest) {
-        System.out.println("*******************");
-        System.out.println(jsonRequest);
-        System.out.println("*******************");
         try {
             url = jsonRequest.getString("url");
             method = jsonRequest.getString("method");
@@ -138,5 +120,10 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     @Override
     public void onGetRequestFailure(String message) {
         ErrorNotifier.notifyServerError(getView(), message);
+    }
+
+    @Override
+    public void onNoConnection() {
+        ErrorNotifier.notifyInternetConnection(getView());
     }
 }

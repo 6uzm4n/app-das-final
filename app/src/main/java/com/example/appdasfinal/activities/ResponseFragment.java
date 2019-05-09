@@ -34,13 +34,11 @@ public class ResponseFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        System.out.println("ON CREATE" + this.getClass().getName());
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("ON CREATE VIEW" + this.getClass().getName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_response, container, false);
 
@@ -88,7 +86,4 @@ public class ResponseFragment extends Fragment {
         }
     }
 
-    public void foo(){
-        System.out.println("FOOOO");
-    }
 }
