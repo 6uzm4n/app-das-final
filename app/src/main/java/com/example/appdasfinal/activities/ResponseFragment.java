@@ -87,4 +87,8 @@ public class ResponseFragment extends Fragment {
             textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDown, null);
         }
     }
+
+    public void foo(){
+        System.out.println("FOOOO");
+    }
 }

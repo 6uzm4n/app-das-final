@@ -16,10 +16,26 @@ import com.example.appdasfinal.R;
 
 public class RequestActivity extends AppCompatActivity {
 
+    RequestFragment requestFragment;
+    ResponseFragment responseFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
+
+        String id = null;
+        Bundle args = getIntent().getExtras();
+        if (args != null) {
+            id = args.getString("id");
+        }
+        System.out.println("========================");
+        System.out.println("ACTIVITY " + id);
+        System.out.println("========================");
+
+        requestFragment = new RequestFragment();
+        requestFragment.setId(id);
+        responseFragment = new ResponseFragment();
 
         // Setting the tabs
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -44,12 +60,13 @@ public class RequestActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new RequestFragment();
+                    return requestFragment;
                 case 1:
-                    return new ResponseFragment();
+                    return responseFragment;
             }
             return null;
         }
+
 
         @Nullable
         @Override
@@ -68,5 +85,9 @@ public class RequestActivity extends AppCompatActivity {
             // Show 2 total pages.
             return 2;
         }
+    }
+
+    public void foo() {
+        responseFragment.foo();
     }
 }
