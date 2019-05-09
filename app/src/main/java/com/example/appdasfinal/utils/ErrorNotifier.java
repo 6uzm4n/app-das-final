@@ -23,4 +23,11 @@ public class ErrorNotifier {
         snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
         snackbar.show();
     }
+
+    public static void notifyServerError(View view, String message) {
+        Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), message, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
+        snackbar.show();
+    }
 }

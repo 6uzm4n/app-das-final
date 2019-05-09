@@ -17,13 +17,14 @@ import android.widget.EditText;
 
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
+import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProjectListFragment extends Fragment implements ServerRequestHandler.ServerRequestHandlerListener {
+public class ProjectListFragment extends Fragment implements ServerRequestHandlerListener {
 
     JSONArray projects;
     ProjectClickListener listener;
@@ -78,17 +79,14 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onGetProjectsResponse(JSONArray jsonProjects) {
-//        for (int i = 0; i < jsonProjects.length(); i++) {
-//            try {
-//                projects.put(jsonProjects.getJSONObject(i));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    public void onGetProjectsSuccess(JSONArray jsonProjects) {
         projects = jsonProjects;
-//        projectRVAdapter.notifyDataSetChanged();
         updateProjectList();
+    }
+
+    @Override
+    public void onGetProjectsFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void updateProjectList() {
@@ -160,7 +158,7 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newName = edittext.getText().toString();
+                String newName = edittext.getText().toString().trim();
                 if (newName.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
@@ -188,11 +186,11 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String name = edittext.getText().toString();
+                String name = edittext.getText().toString().trim();
                 if (name.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
-                    createProject(edittext.getText().toString());
+                    createProject(name);
                 }
             }
         });
@@ -211,12 +209,13 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onCreateProjectResponse(String message, JSONObject jsonProject) {
-        if (jsonProject != null) {
-            fetchProjects();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onCreateProjectSuccess(String message, JSONObject jsonProject) {
+        fetchProjects();
+    }
+
+    @Override
+    public void onCreateProjectFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void deleteProject(String id) {
@@ -224,12 +223,13 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onDeleteProjectResponse(String message, boolean success) {
-        if (success) {
-            fetchProjects();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onDeleteProjectSuccess(String message) {
+        fetchProjects();
+    }
+
+    @Override
+    public void onDeleteProjectFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void renameProject(String id, String newName) {
@@ -237,12 +237,18 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onUpdateProjectResponse(String message, JSONObject jsonProject) {
-        if (jsonProject != null) {
-            fetchProjects();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onUpdateProjectSuccess(String message, JSONObject jsonProject) {
+        fetchProjects();
+    }
+
+    @Override
+    public void onUpdateProjectFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
+    }
+
+    @Override
+    public void onNoConnection() {
+        ErrorNotifier.notifyInternetConnection(getView());
     }
 
     public interface ProjectClickListener {

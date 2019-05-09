@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
+import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity implements ServerRequestHandler.ServerRequestHandlerListener {
+public class RegisterActivity extends AppCompatActivity implements ServerRequestHandlerListener {
 
     private TextInputLayout inputEmail;
     private TextInputLayout inputPassword;
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateRegister()){
+                if (validateRegister()) {
                     ServerRequestHandler.register(getEmail(), getPassword(), RegisterActivity.this);
                 }
             }
@@ -51,13 +52,13 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
     }
 
     @Override
-    public void onRegisterResponse(String message, String userId) {
-        System.out.println(userId);
-        if (userId != null) {
-            finish();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
-        }
+    public void onRegisterSuccess(String message, String userId) {
+        finish();
+    }
+
+    @Override
+    public void onRegisterFailure(String message) {
+        ErrorNotifier.notifyServerError(getWindow().getDecorView().getRootView(), message);
     }
 
     private boolean validateRegister() {

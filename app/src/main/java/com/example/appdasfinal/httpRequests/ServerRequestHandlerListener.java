@@ -15,9 +15,9 @@ public interface ServerRequestHandlerListener {
     /**
      * Called when the login request has failed.
      *
-     * @param errorMessage Error message returned by the server
+     * @param message Error message returned by the server
      */
-    default void onLoginFailure(String errorMessage) {}
+    default void onLoginFailure(String message) {}
 
     /**
      * Called when the register request has been completed successfully.

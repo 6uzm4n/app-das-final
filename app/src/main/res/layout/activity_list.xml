@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.ListActivity">
 
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <FrameLayout
         android:id="@+id/fragment_projects"
         android:name="com.example.appdasfinal.activities.ProjectListFragment"
@@ -14,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <FrameLayout
         android:id="@+id/fragment_requests"
@@ -24,6 +29,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/fragment_projects" />
 
 </android.support.constraint.ConstraintLayout>

@@ -27,7 +27,9 @@
         <activity
             android:name=".activities.RegisterActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".activities.ListActivity" />
+        <activity
+            android:name=".activities.ListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.RequestActivity"
             android:label="@string/title_activity_request"

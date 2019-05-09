@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.appdasfinal.R;
-import com.example.appdasfinal.httpRequests.HTTPRequestSender;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
+import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
 import com.example.appdasfinal.utils.Utils;
 
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 
-public class RequestListFragment extends Fragment implements ServerRequestHandler.ServerRequestHandlerListener {
+public class RequestListFragment extends Fragment implements ServerRequestHandlerListener {
 
     String id;
 
@@ -89,9 +89,14 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onGetRequestsResponse(JSONArray jsonRequests) {
+    public void onGetRequestsSuccess(JSONArray jsonRequests) {
         requests = jsonRequests;
         updateRequestsList();
+    }
+
+    @Override
+    public void onGetRequestsFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void updateRequestsList() {
@@ -130,9 +135,6 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
                 switch (which) {
                     case 0:
                         try {
-                            System.out.println("RRRRRRRRRRR");
-                            System.out.println(requests.getJSONObject(pos));
-                            System.out.println("RRRRRRRRRRR");
                             alertDialogRename(requests.getJSONObject(pos));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -165,7 +167,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newName = edittext.getText().toString();
+                String newName = edittext.getText().toString().trim();
                 if (newName.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
@@ -192,11 +194,11 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String name = edittext.getText().toString();
+                String name = edittext.getText().toString().trim();
                 if (name.equals("")) {
                     ErrorNotifier.notifyEmptyField(getView());
                 } else {
-                    createRequest(edittext.getText().toString());
+                    createRequest(name);
                 }
             }
         });
@@ -215,12 +217,13 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onCreateRequestResponse(String message, JSONObject jsonRequest) {
-        if (jsonRequest != null) {
-            fetchRequests();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onCreateRequestSuccess(String message, JSONObject jsonRequest) {
+        fetchRequests();
+    }
+
+    @Override
+    public void onCreateRequestFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void deleteRequest(String id) {
@@ -228,12 +231,13 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onDeleteRequestResponse(String message, boolean success) {
-        if (success) {
-            fetchRequests();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onDeleteRequestSuccess(String message) {
+        fetchRequests();
+    }
+
+    @Override
+    public void onDeleteRequestFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void renameRequest(JSONObject request, String newName) {
@@ -260,15 +264,19 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     }
 
     @Override
-    public void onUpdateRequestResponse(String message, JSONObject jsonRequest) {
-        if (jsonRequest != null) {
-            fetchRequests();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getView());
-        }
+    public void onUpdateRequestSuccess(String message, JSONObject jsonRequest) {
+        fetchRequests();
     }
 
-    // TODO: Rename listener
+    @Override
+    public void onUpdateRequestFailure(String message) {
+        ErrorNotifier.notifyServerError(getView(), message);
+    }
+
+    @Override
+    public void onNoConnection() {
+        ErrorNotifier.notifyInternetConnection(getView());
+    }
 
     public interface RequestClickListener {
         void onRequestClicked(String id);

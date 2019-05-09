@@ -18,6 +18,14 @@
     <string name="error_password_format">Password must be 8 characters or longer and contain letters and numbers.</string>
     <string name="error_password2_different">Both password fields must be the same.</string>
 
+    <!-- Dialogs -->
+    <string name="option_yes">Yes</string>
+    <string name="option_no">No</string>
+    <string name="dialog_exit_title">Warning</string>
+    <string name="dialog_exit_message">Are you sure you want to close the app?</string>
+    <string name="dialog_logout_title">Warning</string>
+    <string name="dialog_logout_message">Are you sure you want to logout?</string>
+
     <!-- List activity -->
     <string name="dialog_edit">Rename</string>
     <string name="dialog_delete">Delete</string>

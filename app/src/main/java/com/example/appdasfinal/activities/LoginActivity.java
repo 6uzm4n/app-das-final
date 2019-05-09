@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
+import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements ServerRequestHandler.ServerRequestHandlerListener {
+public class LoginActivity extends AppCompatActivity implements ServerRequestHandlerListener {
 
     TextInputLayout inputEmail;
     TextInputLayout inputPassword;
@@ -49,24 +50,24 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
     }
 
     @Override
-    public void onLoginResponse(String token) {
-        System.out.println(token);
+    public void onLoginSuccess(String token) {
+        inputEmail.setError("");
         if (token != null) {
             SharedPreferences preferences = getSharedPreferences("session", MODE_PRIVATE);
             preferences.edit().putString("session", token).apply();
             Intent i = new Intent(LoginActivity.this, ListActivity.class);
             startActivity(i);
             finish();
-        } else {
-            ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
         }
     }
 
+    @Override
+    public void onLoginFailure(String message) {
+        inputEmail.setError(getString(R.string.error_login));
+    }
+
     private boolean validateLogin() {
-        if (!validateEmail() | !validatePassword()) {
-            return false;
-        }
-        return true;
+        return !(!validateEmail() | !validatePassword());
     }
 
     private boolean validateEmail() {
@@ -100,5 +101,8 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
         return Objects.requireNonNull(inputPassword.getEditText()).getText().toString().trim();
     }
 
-
+    @Override
+    public void onNoConnection() {
+        ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
+    }
 }
