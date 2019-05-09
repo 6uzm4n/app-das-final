@@ -15,7 +15,7 @@
     <string name="error_login">Email or password are not correct.</string>
     <string name="error_email_format">Introduce a valid email address.</string>
     <string name="error_email_taken">Account already exists for your email.</string>
-    <string name="error_password_format">Password must be 8 characters or longer and contain letters and numbers.</string>
+    <string name="error_password_format">Password must be 8 characters or longer and contain letters (both uppercase and lowercase) and numbers.</string>
     <string name="error_password2_different">Both password fields must be the same.</string>
 
     <!-- Dialogs -->
