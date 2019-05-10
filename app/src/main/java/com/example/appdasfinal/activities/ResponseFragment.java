@@ -73,20 +73,20 @@ public class ResponseFragment extends Fragment {
     private void toggleHeadersVisibility(){
         if (textViewHeaders.getVisibility() == View.VISIBLE){
             textViewHeaders.setVisibility(View.GONE);
-            textViewHeadersTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowUp, null);
+            textViewHeadersTitle.setCompoundDrawablesWithIntrinsicBounds(arrowUp, null, null, null);
         } else {
             textViewHeaders.setVisibility(View.VISIBLE);
-            textViewHeadersTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDown, null);
+            textViewHeadersTitle.setCompoundDrawablesWithIntrinsicBounds(arrowDown, null, null, null);
         }
     }
 
     private void toggleBodyVisibility(){
         if (textViewBody.getVisibility() == View.VISIBLE){
             textViewBody.setVisibility(View.GONE);
-            textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowUp, null);
+            textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(arrowUp, null, null, null);
         } else {
             textViewBody.setVisibility(View.VISIBLE);
-            textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDown, null);
+            textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(arrowDown, null, null, null);
         }
     }
 

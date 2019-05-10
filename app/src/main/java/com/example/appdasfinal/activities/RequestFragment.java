@@ -66,8 +66,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     private CardView addHeaderCardView() {
-
-        CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.header, null);
+        CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.cardview_header, null);
         cardView.findViewById(R.id.imageView_remove_header).setOnClickListener(v2 -> {
             headerList.removeView(cardView);
         });
