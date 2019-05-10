@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">App DAS Final</string>
-    <string name="title_activity_request">RequestActivity</string>
+    <string name="app_name">DBug</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_list">Browse projects</string>
+    <string name="title_activity_request">Request</string>
 
     <!-- Login/register activity -->
     <string name="input_password">Password</string>
