@@ -91,7 +91,7 @@ public class HTTPRequestSender {
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(URL_REGISTER)
                 .setHeaders(headers)
-                .setBody(data);
+                .setBody(data.toString());
 
         return builder;
     }
@@ -135,7 +135,7 @@ public class HTTPRequestSender {
         HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(URL_CREATE_PROJECT)
-                .setBody(data)
+                .setBody(data.toString())
                 .setHeaders(headers);
 
         return builder;
@@ -156,7 +156,7 @@ public class HTTPRequestSender {
         HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(String.format(URL_UPDATE_PROJECT, projectId))
-                .setBody(data)
+                .setBody(data.toString())
                 .setHeaders(headers);
 
         return builder;
@@ -214,7 +214,7 @@ public class HTTPRequestSender {
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(String.format(URL_CREATE_REQUEST, projectId))
                 .setHeaders(headers)
-                .setBody(data);
+                .setBody(data.toString());
 
         return builder;
     }
@@ -253,7 +253,7 @@ public class HTTPRequestSender {
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(String.format(URL_UPDATE_REQUEST, requestId))
                 .setHeaders(headers)
-                .setBody(data);
+                .setBody(data.toString());
 
 
         return builder;
@@ -272,18 +272,6 @@ public class HTTPRequestSender {
     }
 
     public HttpRequest.Builder customRequest(String method, String url, String body, HashMap<String, String> headers) {
-        JSONObject data;
-        try {
-            if (body != null) {
-                data = new JSONObject(body);
-            } else {
-                data = null;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
         HttpRequest.RequestMethod requestMethod;
         try {
             requestMethod = HttpRequest.RequestMethod.valueOf(method.toUpperCase());
@@ -294,7 +282,7 @@ public class HTTPRequestSender {
 
         HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.setUrl(url)
-                .setBody(data)
+                .setBody(body)
                 .setRequestMethod(requestMethod)
                 .setHeaders(headers);
 

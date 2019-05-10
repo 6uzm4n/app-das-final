@@ -1,7 +1,6 @@
 package com.example.appdasfinal.httpRequests;
 
 import android.os.AsyncTask;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -36,7 +35,7 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
     private RequestMethod method;
     private int statusCode;
     private HashMap<String, String> headers;
-    private JSONObject body = null;
+    private String body;
 
     private HttpRequest() { }
 
@@ -110,20 +109,17 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
             }
         }
 
-        // si hay un json lo añade
-        if (body != null) {
+        connection.setRequestMethod(method.getValue());
+
+        // si hay un cuerpo lo añade
+        if (body != null && method != RequestMethod.GET) {
             connection.setDoOutput(true);
             connection.setDoInput(true);
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(body.toString());
+            wr.write(body);
             wr.flush();
             wr.close();
         }
-
-        // poner el método después del cuerpo para que
-        // no se sobreescriba a post automáticamente
-        // por añadir un cuerpo
-        connection.setRequestMethod(method.getValue());
 
         return connection;
     }
@@ -158,7 +154,7 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
             return this;
         }
 
-        public Builder setBody(JSONObject body) {
+        public Builder setBody(String body) {
             t.body = body;
             return this;
         }
