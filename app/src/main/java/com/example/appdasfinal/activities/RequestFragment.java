@@ -113,9 +113,18 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     @Override
     public void onGetRequestSuccess(JSONObject jsonRequest) {
         try {
-            url = jsonRequest.getString("url");
+            if (jsonRequest.isNull("url")) {
+                url = jsonRequest.getString("");
+            } else {
+                url = jsonRequest.getString("url");
+            }
+
             method = jsonRequest.getString("method");
-            body = jsonRequest.getString("body");
+            if (jsonRequest.isNull("body")) {
+                body = "";
+            } else {
+                body = jsonRequest.getString("body");
+            }
             JSONArray headersJson = jsonRequest.getJSONArray("headers");
             headers = new HashMap<>();
             for (int i = 0; i < headersJson.length(); i++) {
@@ -169,11 +178,10 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
     public String getCurrentBody() {
         // TODO: Cambiar si necesario
-        if (bodyTextView.getText().toString().equals("") || bodyTextView.getText().toString().equals("null")) {
+        if (bodyTextView.getText().toString().equals("")) {
             return null;
-        } else {
-            return bodyTextView.getText().toString();
         }
+        return bodyTextView.getText().toString();
     }
 
     public HashMap<String, String> getCurrentHeaders() {
