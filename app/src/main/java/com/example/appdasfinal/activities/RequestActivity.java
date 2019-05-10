@@ -10,20 +10,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-
-
 import com.example.appdasfinal.R;
-import com.example.appdasfinal.httpRequests.HTTPRequestSender;
-import com.example.appdasfinal.httpRequests.HttpRequest;
-import com.example.appdasfinal.httpRequests.OnConnectionFailure;
-import com.example.appdasfinal.httpRequests.OnConnectionSuccess;
+import com.example.appdasfinal.httpRequests.*;
 import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.HashMap;
 
 
-public class RequestActivity extends AppCompatActivity implements OnConnectionSuccess, OnConnectionFailure {
+public class RequestActivity extends AppCompatActivity implements OnConnectionSuccess, OnConnectionFailure, ServerRequestHandlerListener {
 
     private ViewPager viewPager;
 
@@ -43,13 +37,11 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
             this.id = args.getString("id");
         }
 
-        FloatingActionButton fab = findViewById(R.id.floatingActionButton_send);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRequest();
-            }
-        });
+        FloatingActionButton fabSend = findViewById(R.id.floatingActionButton_send);
+        fabSend.setOnClickListener(v -> sendRequest());
+
+        FloatingActionButton fabSave = findViewById(R.id.floatingActionButton_save);
+        fabSave.setOnClickListener(v -> requestFragment.saveRequest());
 
         // Setting the tabs
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -70,7 +62,6 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
         }
 
     }
-
 
     private void sendRequest() {
         HTTPRequestSender sender = HTTPRequestSender.getInstance();

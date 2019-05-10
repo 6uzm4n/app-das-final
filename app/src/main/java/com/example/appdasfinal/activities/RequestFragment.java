@@ -9,10 +9,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
@@ -28,6 +25,8 @@ import java.util.Map;
 
 public class RequestFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
+    private String id;
+    private String name;
     private String url;
     private String method;
     private String body;
@@ -59,9 +58,9 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         super.onViewCreated(view, savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            String id = args.getString("id");
+            this.id = args.getString("id");
             showProgress(true);
-            ServerRequestHandler.getRequest(id, this);
+            ServerRequestHandler.getRequest(this.id, this);
         }
     }
 
@@ -112,6 +111,8 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     @Override
     public void onGetRequestSuccess(JSONObject jsonRequest) {
         try {
+            name = jsonRequest.getString("name");
+
             if (jsonRequest.isNull("url")) {
                 url = jsonRequest.getString("");
             } else {
@@ -139,6 +140,39 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
     @Override
     public void onGetRequestFailure(String message) {
+        showProgress(false);
+        ErrorNotifier.notifyServerError(getView(), message);
+    }
+
+    public void saveRequest() {
+        String id = this.id;
+        String name = this.name;
+        String url = getCurrentUrl();
+        String body = getCurrentBody();
+        String method = getCurrentMethod();
+        HashMap<String, String> headers = getCurrentHeaders();
+        ServerRequestHandler.updateRequest(
+                id,
+                name,
+                url,
+                body,
+                method,
+                headers,
+                this
+        );
+        showProgress(true);
+    }
+
+    @Override
+    public void onUpdateRequestSuccess(String message, JSONObject jsonRequest) {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
+        showProgress(false);
+    }
+
+    @Override
+    public void onUpdateRequestFailure(String message) {
         showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
