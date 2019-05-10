@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestFragment extends Fragment implements ServerRequestHandlerListener {
+public class RequestFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
     String url;
     String method;
@@ -50,6 +50,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         Bundle args = getArguments();
         if (args != null) {
             String id = args.getString("id");
+            showProgress(true);
             ServerRequestHandler.getRequest(id, this);
         }
     }
@@ -78,6 +79,10 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     private void setValues() {
+        if (getView() == null) {
+            return;
+        }
+
         TextView urlTextView = getView().findViewById(R.id.editText_url);
         urlTextView.setText(this.url);
 
@@ -115,15 +120,34 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        showProgress(false);
     }
 
     @Override
     public void onGetRequestFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     @Override
     public void onNoConnection() {
+        showProgress(false);
         ErrorNotifier.notifyInternetConnection(getView());
+    }
+
+    @Override
+    public View getContentView() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.scrollView_requestFragment);
+        }
+        return null;
+    }
+
+    @Override
+    public View getProgressBar() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.progressBar_requestFragment);
+        }
+        return null;
     }
 }

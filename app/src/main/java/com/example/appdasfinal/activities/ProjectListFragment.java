@@ -3,9 +3,9 @@ package com.example.appdasfinal.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,30 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProjectListFragment extends Fragment implements ServerRequestHandlerListener {
+public class ProjectListFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
-    JSONArray projects;
+    JSONArray projects = new JSONArray();
     ProjectClickListener listener;
-
-    {
-        try {
-            projects = new JSONArray("[]");
-//            projects = new JSONArray("[{project_id: '1', name: 'name1'}, {project_id: '2', name: 'name2'}, {project_id: '3', name: 'name3'}]");
-//            projects = new JSONArray("[{'_links':{},'name':'Pokemon PPP','project_id':'3bfc4181-ebc8-4f74-b9ec-d1bdaaf70904','requests':['89a1ece3-35ee-40dd-958a-962c0488879b','92802974-a38d-4969-9957-a0760777803c'],'user':'db02901d-f91b-4a21-9a1e-2b4249bdca73'},{'_links':{},'name':'Otra API','project_id':'33114a4c-bb66-437a-b859-f88754caff98','requests':[],'user':'db02901d-f91b-4a21-9a1e-2b4249bdca73'}]");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     RecyclerView projectsRecycler;
     ProjectRVAdapter projectRVAdapter;
@@ -62,19 +50,20 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         projectsRecycler = view.findViewById(R.id.recyclerview_projects);
 
         FloatingActionButton fab = view.findViewById(R.id.fab_add_project);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialogCreate();
-            }
-        });
-
-        fetchProjects();
+        fab.setOnClickListener(v -> alertDialogCreate());
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        fetchProjects();
+    }
+
     private void fetchProjects() {
+        showProgress(true);
         ServerRequestHandler.getProjects(this);
     }
 
@@ -82,10 +71,12 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     public void onGetProjectsSuccess(JSONArray jsonProjects) {
         projects = jsonProjects;
         updateProjectList();
+        showProgress(false);
     }
 
     @Override
     public void onGetProjectsFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
@@ -125,25 +116,22 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     private void alertDialogAction(int pos) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         CharSequence[] options = {getString(R.string.dialog_edit), getString(R.string.dialog_delete)};
-        dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        try {
-                            alertDialogRename(projects.getJSONObject(pos).getString("name"), projects.getJSONObject(pos).getString("project_id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case 1:
-                        try {
-                            deleteProject(projects.getJSONObject(pos).getString("project_id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                }
+        dialogBuilder.setItems(options, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    try {
+                        alertDialogRename(projects.getJSONObject(pos).getString("name"), projects.getJSONObject(pos).getString("project_id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 1:
+                    try {
+                        deleteProject(projects.getJSONObject(pos).getString("project_id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         });
         dialogBuilder.create().show();
@@ -155,22 +143,16 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setTitle(getString(R.string.dialog_edit_title));
 
-        dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newName = edittext.getText().toString().trim();
-                if (newName.equals("")) {
-                    ErrorNotifier.notifyEmptyField(getView());
-                } else {
-                    renameProject(id, newName);
-                }
+        dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), (dialog, which) -> {
+            String newName = edittext.getText().toString().trim();
+            if (newName.equals("")) {
+                ErrorNotifier.notifyEmptyField(getView());
+            } else {
+                renameProject(id, newName);
             }
         });
 
-        dialogBuilder.setNegativeButton(getString(R.string.dialog_edit_discard), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        dialogBuilder.setNegativeButton(getString(R.string.dialog_edit_discard), (dialog, which) -> {
         });
 
         dialogBuilder.setView(edittext);
@@ -183,28 +165,23 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setTitle(getString(R.string.dialog_create_project_title));
         dialogBuilder.setView(edittext);
 
-        dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = edittext.getText().toString().trim();
-                if (name.equals("")) {
-                    ErrorNotifier.notifyEmptyField(getView());
-                } else {
-                    createProject(name);
-                }
+        dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), (dialog, which) -> {
+            String name = edittext.getText().toString().trim();
+            if (name.equals("")) {
+                ErrorNotifier.notifyEmptyField(getView());
+            } else {
+                createProject(name);
             }
         });
 
-        dialogBuilder.setNegativeButton(getString(R.string.dialog_create_discard), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        dialogBuilder.setNegativeButton(getString(R.string.dialog_create_discard), (dialog, which) -> {
         });
 
         dialogBuilder.create().show();
     }
 
     private void createProject(String name) {
+        showProgress(true);
         ServerRequestHandler.createProject(name, this);
     }
 
@@ -215,10 +192,12 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onCreateProjectFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void deleteProject(String id) {
+        showProgress(true);
         ServerRequestHandler.deleteProject(id, this);
     }
 
@@ -229,10 +208,12 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onDeleteProjectFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void renameProject(String id, String newName) {
+        showProgress(true);
         ServerRequestHandler.updateProject(id, newName, this);
     }
 
@@ -243,15 +224,34 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onUpdateProjectFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     @Override
     public void onNoConnection() {
+        showProgress(false);
         ErrorNotifier.notifyInternetConnection(getView());
     }
 
+    @Override
+    public View getContentView() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.constraintLayout_projectList);
+        }
+        return null;
+    }
+
+    @Override
+    public View getProgressBar() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.progressBar_projectList);
+        }
+        return null;
+    }
+
     public interface ProjectClickListener {
+
         void onProjectClicked(String id);
     }
 
