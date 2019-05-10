@@ -11,23 +11,29 @@ import java.util.Objects;
 public class ErrorNotifier {
 
     public static void notifyEmptyField(View view) {
-        Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), view.getContext().getString(R.string.error_empty_field), Snackbar.LENGTH_LONG);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
-        snackbar.show();
+        if (view != null) {
+            Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), view.getContext().getString(R.string.error_empty_field), Snackbar.LENGTH_LONG);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
+            snackbar.show();
+        }
     }
 
     public static void notifyInternetConnection(View view) {
-        Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), view.getContext().getString(R.string.error_internet_connection), Snackbar.LENGTH_LONG);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
-        snackbar.show();
+        if (view != null) {
+            Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), view.getContext().getString(R.string.error_internet_connection), Snackbar.LENGTH_LONG);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
+            snackbar.show();
+        }
     }
 
     public static void notifyServerError(View view, String message) {
-        Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), message, Snackbar.LENGTH_LONG);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
-        snackbar.show();
+        if (view != null) {
+            Snackbar snackbar = Snackbar.make(Objects.requireNonNull(view), message, Snackbar.LENGTH_LONG);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorError));
+            snackbar.show();
+        }
     }
 }

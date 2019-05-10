@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
@@ -15,7 +16,7 @@ import com.example.appdasfinal.utils.ErrorNotifier;
 
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity implements ServerRequestHandlerListener {
+public class RegisterActivity extends AppCompatActivity implements ServerRequestHandlerListener, Loader {
 
     private TextInputLayout inputEmail;
     private TextInputLayout inputPassword;
@@ -31,21 +32,17 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
         inputPassword2 = findViewById(R.id.textInputLayout_password2);
 
         TextView loginLink = findViewById(R.id.textView_login);
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(i);
-            }
+        loginLink.setOnClickListener(v -> {
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
         });
 
         Button registerButton = findViewById(R.id.button_register);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateRegister()) {
-                    ServerRequestHandler.register(getEmail(), getPassword(), RegisterActivity.this);
-                }
+        registerButton.setOnClickListener(v -> {
+            if (validateRegister()) {
+                showProgress(true);
+                ServerRequestHandler.register(getEmail(), getPassword(), RegisterActivity.this);
             }
         });
 
@@ -53,12 +50,20 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
 
     @Override
     public void onRegisterSuccess(String message, String userId) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         finish();
     }
 
     @Override
     public void onRegisterFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getWindow().getDecorView().getRootView(), message);
+    }
+
+    @Override
+    public void onNoConnection() {
+        showProgress(false);
+        ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
     }
 
     private boolean validateRegister() {
@@ -129,5 +134,15 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
     private String getPassword2() {
         //Es bueno utilizar trim() ya que los correctores pueden introducir un espacio indeseado al final de los inputs.
         return Objects.requireNonNull(inputPassword2.getEditText()).getText().toString().trim();
+    }
+
+    @Override
+    public View getContentView() {
+        return findViewById(R.id.scrollView_register);
+    }
+
+    @Override
+    public View getProgressBar() {
+        return findViewById(R.id.progressBar_register);
     }
 }

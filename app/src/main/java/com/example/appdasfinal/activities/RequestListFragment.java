@@ -3,9 +3,9 @@ package com.example.appdasfinal.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,13 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
 import com.example.appdasfinal.utils.Utils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,21 +26,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 
-public class RequestListFragment extends Fragment implements ServerRequestHandlerListener {
+public class RequestListFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
     String id;
 
-    JSONArray requests;
+    JSONArray requests = new JSONArray();
     RequestClickListener listener;
-
-    {
-        try {
-            requests = new JSONArray("[]");
-//            requests = new JSONArray("[{id: '1', name: 'name1', method: 'GET'}, {id: '2', name: 'name2', method: 'POST'}]");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     RecyclerView requestsRecycler;
     RequestRVAdapter requestRVAdapter;
@@ -72,19 +61,20 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         requestsRecycler = view.findViewById(R.id.recyclerview_requests);
 
         FloatingActionButton fab = view.findViewById(R.id.fab_add_request);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialogCreate();
-            }
-        });
-
-        fetchRequests();
+        fab.setOnClickListener(v -> alertDialogCreate());
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        fetchRequests();
+    }
+
     private void fetchRequests() {
+        showProgress(true);
         ServerRequestHandler.getRequests(id, this);
     }
 
@@ -92,10 +82,12 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     public void onGetRequestsSuccess(JSONArray jsonRequests) {
         requests = jsonRequests;
         updateRequestsList();
+        showProgress(false);
     }
 
     @Override
     public void onGetRequestsFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
@@ -129,25 +121,22 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     private void alertDialogAction(int pos) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         CharSequence[] options = {getString(R.string.dialog_edit), getString(R.string.dialog_delete)};
-        dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        try {
-                            alertDialogRename(requests.getJSONObject(pos));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case 1:
-                        try {
-                            deleteRequest(requests.getJSONObject(pos).getString("request_id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                }
+        dialogBuilder.setItems(options, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    try {
+                        alertDialogRename(requests.getJSONObject(pos));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 1:
+                    try {
+                        deleteRequest(requests.getJSONObject(pos).getString("request_id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         });
         dialogBuilder.create().show();
@@ -164,22 +153,16 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setTitle(getString(R.string.dialog_edit_title));
         dialogBuilder.setView(edittext);
 
-        dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newName = edittext.getText().toString().trim();
-                if (newName.equals("")) {
-                    ErrorNotifier.notifyEmptyField(getView());
-                } else {
-                    renameRequest(request, newName);
-                }
+        dialogBuilder.setPositiveButton(getString(R.string.dialog_edit_save), (dialog, which) -> {
+            String newName = edittext.getText().toString().trim();
+            if (newName.equals("")) {
+                ErrorNotifier.notifyEmptyField(getView());
+            } else {
+                renameRequest(request, newName);
             }
         });
 
-        dialogBuilder.setNegativeButton(getString(R.string.dialog_edit_discard), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        dialogBuilder.setNegativeButton(getString(R.string.dialog_edit_discard), (dialog, which) -> {
         });
 
         dialogBuilder.create().show();
@@ -191,28 +174,23 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         dialogBuilder.setTitle(getString(R.string.dialog_create_request_title));
         dialogBuilder.setView(edittext);
 
-        dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = edittext.getText().toString().trim();
-                if (name.equals("")) {
-                    ErrorNotifier.notifyEmptyField(getView());
-                } else {
-                    createRequest(name);
-                }
+        dialogBuilder.setPositiveButton(getString(R.string.dialog_create_save), (dialog, which) -> {
+            String name = edittext.getText().toString().trim();
+            if (name.equals("")) {
+                ErrorNotifier.notifyEmptyField(getView());
+            } else {
+                createRequest(name);
             }
         });
 
-        dialogBuilder.setNegativeButton(getString(R.string.dialog_create_discard), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        dialogBuilder.setNegativeButton(getString(R.string.dialog_create_discard), (dialog, which) -> {
         });
 
         dialogBuilder.create().show();
     }
 
     private void createRequest(String name) {
+        showProgress(true);
         ServerRequestHandler.createRequest(id, name, this);
     }
 
@@ -223,10 +201,12 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onCreateRequestFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void deleteRequest(String id) {
+        showProgress(true);
         ServerRequestHandler.deleteRequest(id, this);
     }
 
@@ -237,6 +217,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onDeleteRequestFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
@@ -259,6 +240,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
             e.printStackTrace();
         }
         if (Utils.requireNotNull(requestId, newName, url, body, method, headers)) {
+            showProgress(true);
             ServerRequestHandler.updateRequest(requestId, newName, url, body, method, headers, this);
         }
     }
@@ -270,15 +252,34 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
 
     @Override
     public void onUpdateRequestFailure(String message) {
+        showProgress(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
     @Override
     public void onNoConnection() {
+        showProgress(false);
         ErrorNotifier.notifyInternetConnection(getView());
     }
 
+    @Override
+    public View getContentView() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.constraintLayout_requestList);
+        }
+        return null;
+    }
+
+    @Override
+    public View getProgressBar() {
+        if (getView() != null) {
+            return getView().findViewById(R.id.progressBar_requestList);
+        }
+        return null;
+    }
+
     public interface RequestClickListener {
+
         void onRequestClicked(String id);
     }
 }
