@@ -3,12 +3,14 @@ package com.example.appdasfinal.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 
 import com.example.appdasfinal.R;
@@ -17,6 +19,9 @@ import com.example.appdasfinal.R;
 public class RequestActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
+
+    RequestFragment requestFragment;
+    ResponseFragment responseFragment;
 
     private String id;
 
@@ -30,6 +35,14 @@ public class RequestActivity extends AppCompatActivity {
         if (args != null) {
             this.id = args.getString("id");
         }
+
+        FloatingActionButton fab = findViewById(R.id.floatingActionButton_send);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendRequest();
+            }
+        });
 
         // Setting the tabs
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -65,13 +78,14 @@ public class RequestActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    RequestFragment requestFragment = new RequestFragment();
+                    requestFragment = new RequestFragment();
                     Bundle args = new Bundle();
                     args.putString("id", id);
                     requestFragment.setArguments(args);
                     return requestFragment;
                 case 1:
-                    return new ResponseFragment();
+                    responseFragment = new ResponseFragment();
+                    return responseFragment;
             }
             return null;
         }
@@ -94,6 +108,10 @@ public class RequestActivity extends AppCompatActivity {
             // Show 2 total pages.
             return 2;
         }
+    }
+
+    private void sendRequest() {
+        System.out.println("FOO");
     }
 
 }
