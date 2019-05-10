@@ -87,8 +87,6 @@ public class HTTPRequestSender {
             e.printStackTrace();
         }
 
-        System.out.println(data.toString());
-
         HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.setRequestMethod(HttpRequest.RequestMethod.POST)
                 .setUrl(URL_REGISTER)
@@ -247,7 +245,6 @@ public class HTTPRequestSender {
                 jsonRequestHeaders.put(jsonRequestHeader);
             }
             data.put("headers", jsonRequestHeaders);
-            System.out.println(data.toString(2));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -28,16 +28,26 @@ import java.util.Map;
 
 public class RequestFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
-    String url;
-    String method;
-    String body;
-    HashMap<String, String> headers;
+    private String url;
+    private String method;
+    private String body;
+    private HashMap<String, String> headers;
+
+    TextView urlTextView;
+    Spinner methodSpinner;
+    LinearLayout headerList;
+    TextView bodyTextView;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_request, container, false);
+
+        urlTextView = view.findViewById(R.id.editText_url);
+        methodSpinner = view.findViewById(R.id.spinner_method);
+        headerList = view.findViewById(R.id.linearLayout_headers);
+        bodyTextView = view.findViewById(R.id.editText_body);
 
         Button button = view.findViewById(R.id.buttonAddHeader);
         button.setOnClickListener(v -> addHeaderCardView());
@@ -56,7 +66,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     private CardView addHeaderCardView() {
-        LinearLayout headerList = getView().findViewById(R.id.linearLayout_headers);
+
         CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.header, null);
         cardView.findViewById(R.id.imageView_remove_header).setOnClickListener(v2 -> {
             headerList.removeView(cardView);
@@ -66,7 +76,6 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     private HashMap<String, String> getHeaders() {
-        LinearLayout headerList = getView().findViewById(R.id.linearLayout_headers);
         HashMap<String, String> headers = new HashMap<>();
         for (int i = 0; i < headerList.getChildCount(); i++) {
             CardView headerCardView = (CardView) headerList.getChildAt(i);
@@ -83,10 +92,8 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             return;
         }
 
-        TextView urlTextView = getView().findViewById(R.id.editText_url);
         urlTextView.setText(this.url);
 
-        Spinner methodSpinner = getView().findViewById(R.id.spinner_method);
         for (int i = 0; i < methodSpinner.getCount(); i++) {
             if (methodSpinner.getItemAtPosition(i).toString().equals(this.method)) {
                 methodSpinner.setSelection(i);
@@ -94,7 +101,6 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             }
         }
 
-        TextView bodyTextView = getView().findViewById(R.id.editText_body);
         bodyTextView.setText(this.body);
 
         for (Map.Entry<String, String> entries : this.headers.entrySet()) {
@@ -149,5 +155,29 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             return getView().findViewById(R.id.progressBar_requestFragment);
         }
         return null;
+    }
+
+    public String getCurrentMethod() {
+        // TODO: Cambiar si necesario
+        return methodSpinner.getSelectedItem().toString();
+    }
+
+    public String getCurrentUrl() {
+        // TODO: Cambiar si necesario
+        return urlTextView.getText().toString();
+    }
+
+    public String getCurrentBody() {
+        // TODO: Cambiar si necesario
+        if (bodyTextView.getText().toString().equals("") || bodyTextView.getText().toString().equals("null")) {
+            return null;
+        } else {
+            return bodyTextView.getText().toString();
+        }
+    }
+
+    public HashMap<String, String> getCurrentHeaders() {
+        // TODO: Cambiar si necesario
+        return getHeaders();
     }
 }

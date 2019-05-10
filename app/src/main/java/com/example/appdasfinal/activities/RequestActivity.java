@@ -14,9 +14,16 @@ import android.view.View;
 
 
 import com.example.appdasfinal.R;
+import com.example.appdasfinal.httpRequests.HTTPRequestSender;
+import com.example.appdasfinal.httpRequests.HttpRequest;
+import com.example.appdasfinal.httpRequests.OnConnectionFailure;
+import com.example.appdasfinal.httpRequests.OnConnectionSuccess;
+import com.example.appdasfinal.utils.ErrorNotifier;
+
+import java.util.HashMap;
 
 
-public class RequestActivity extends AppCompatActivity {
+public class RequestActivity extends AppCompatActivity implements OnConnectionSuccess, OnConnectionFailure {
 
     private ViewPager viewPager;
 
@@ -64,6 +71,38 @@ public class RequestActivity extends AppCompatActivity {
 
     }
 
+
+    private void sendRequest() {
+        HTTPRequestSender sender = HTTPRequestSender.getInstance();
+        String method = requestFragment.getCurrentMethod();
+        String url = requestFragment.getCurrentUrl();
+        String body = requestFragment.getCurrentBody();
+        HashMap<String, String> headers = requestFragment.getCurrentHeaders();
+        HttpRequest.Builder builder = sender.customRequest(method, url, body, headers);
+        builder.run(this, this);
+        requestFragment.showProgress(true);
+    }
+
+    @Override
+    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
+        responseFragment.setResponse(statusCode, headers, response);
+        requestFragment.showProgress(false);
+        viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
+        responseFragment.setResponse(statusCode, headers, response);
+        requestFragment.showProgress(false);
+        viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    public void onNoConnection() {
+        requestFragment.showProgress(false);
+        ErrorNotifier.notifyInternetConnection(getWindow().getDecorView().getRootView());
+    }
+
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -108,10 +147,6 @@ public class RequestActivity extends AppCompatActivity {
             // Show 2 total pages.
             return 2;
         }
-    }
-
-    private void sendRequest() {
-        System.out.println("FOO");
     }
 
 }

@@ -130,7 +130,6 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
 
     @Override
     protected void onPostExecute(Object[] result) {
-//        System.out.println(this.statusCode + "\n" + response);
         if (result != null) {
             String response = (String) result[0];
             HashMap<String, String> headers = (HashMap<String, String>) result[1];

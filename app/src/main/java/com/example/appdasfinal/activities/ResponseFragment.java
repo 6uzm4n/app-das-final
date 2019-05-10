@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.appdasfinal.R;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -22,10 +23,11 @@ public class ResponseFragment extends Fragment {
     private Drawable arrowUp;
     private Drawable arrowDown;
 
-    TextView textViewHeaders;
-    TextView textViewBody;
+    TextView textViewCode;
     TextView textViewHeadersTitle;
+    TextView textViewHeaders;
     TextView textViewBodyTitle;
+    TextView textViewBody;
 
 
     public ResponseFragment() {
@@ -44,6 +46,8 @@ public class ResponseFragment extends Fragment {
 
         arrowDown = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_arrow_drop_down);
         arrowUp = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_arrow_drop_up);
+
+        textViewCode = view.findViewById(R.id.textView_code);
 
         textViewHeaders = view.findViewById(R.id.textView_headers);
         textViewHeadersTitle = view.findViewById(R.id.textView_headers_title);
@@ -86,4 +90,9 @@ public class ResponseFragment extends Fragment {
         }
     }
 
+    public void setResponse(int statusCode, HashMap<String, String> headers, String response) {
+        textViewCode.setText(Integer.toString(statusCode));
+        textViewHeaders.setText(headers.toString());
+        textViewBody.setText(response);
+    }
 }
