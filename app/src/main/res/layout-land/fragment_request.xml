@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+    <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar_requestFragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.45"
+            tools:visibility="gone"/>
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/scrollView_requestFragment">
+
+        <android.support.constraint.ConstraintLayout
+                android:id="@+id/ConstraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".activities.RequestFragment" android:focusableInTouchMode="true">
+
+            <TextView
+                    android:id="@+id/textView_url_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="128dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/request_url"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"/>
+
+            <EditText
+                    android:id="@+id/editText_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:inputType="text|textUri"
+                    android:text=""
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_url_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_method"
+                    app:layout_constraintTop_toTopOf="@+id/textView_url_info"/>
+
+            <TextView
+                    android:id="@+id/textView_method_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/request_method"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/textView_url_info"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_url_info"/>
+
+            <Spinner
+                    android:id="@+id/spinner_method"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:entries="@array/request_method_list"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_method_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView_method_info"
+                    app:layout_constraintTop_toTopOf="@+id/textView_method_info"/>
+
+            <TextView
+                    android:id="@+id/textView_headers_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/request_headers"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/textView_method_info"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_method_info"/>
+
+            <LinearLayout
+                    android:id="@+id/linearLayout_headers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView_headers_info"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_headers_info"></LinearLayout>
+
+            <TextView
+                    android:id="@+id/textView_body_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/request_body"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/textView_headers_info"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout_headers"/>
+
+            <EditText
+                    android:id="@+id/editText_body"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_body_info"
+                    app:layout_constraintVertical_bias="0.0"/>
+
+            <Button
+                    android:id="@+id/buttonAddHeader"
+                    android:layout_width="46dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Button"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_headers_info"
+                    app:layout_constraintStart_toEndOf="@+id/textView_headers_info"
+                    app:layout_constraintTop_toTopOf="@+id/textView_headers_info"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>
