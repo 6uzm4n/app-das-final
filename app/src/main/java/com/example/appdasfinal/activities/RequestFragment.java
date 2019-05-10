@@ -79,6 +79,10 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     private void setValues() {
+        if (getView() == null) {
+            return;
+        }
+
         TextView urlTextView = getView().findViewById(R.id.editText_url);
         urlTextView.setText(this.url);
 
