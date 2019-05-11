@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     JSONArray requests = new JSONArray();
     RequestClickListener listener;
 
+    SwipeRefreshLayout refreshLayout;
     RecyclerView requestsRecycler;
     RequestRVAdapter requestRVAdapter;
 
@@ -58,6 +60,8 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
             id = getArguments().getString("project_id");
         }
 
+        refreshLayout = view.findViewById(R.id.refreshLayout_requests);
+        refreshLayout.setOnRefreshListener(() -> ServerRequestHandler.getRequests(id, this));
         requestsRecycler = view.findViewById(R.id.recyclerview_requests);
 
         FloatingActionButton fab = view.findViewById(R.id.fab_add_request);
@@ -83,11 +87,13 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
         requests = jsonRequests;
         updateRequestsList();
         showProgress(false);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onGetRequestsFailure(String message) {
         showProgress(false);
+        refreshLayout.setRefreshing(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
@@ -259,6 +265,7 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
     @Override
     public void onNoConnection() {
         showProgress(false);
+        refreshLayout.setRefreshing(false);
         ErrorNotifier.notifyInternetConnection(getView());
     }
 

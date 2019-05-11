@@ -20,14 +20,23 @@
             android:layout_height="match_parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:id="@+id/constraintLayout_requestList">
-
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_requests"
+        <android.support.v4.widget.SwipeRefreshLayout
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/refreshLayout_requests">
 
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_requests"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_add_request"
                 android:layout_width="wrap_content"
