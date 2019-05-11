@@ -123,13 +123,13 @@
 
             <Button
                     android:id="@+id/buttonAddHeader"
-                    android:layout_width="46dp"
+                    android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginStart="8dp"
-                    android:text="Button"
                     app:layout_constraintBottom_toBottomOf="@+id/textView_headers_info"
                     app:layout_constraintStart_toEndOf="@+id/textView_headers_info"
-                    app:layout_constraintTop_toTopOf="@+id/textView_headers_info"/>
+                    app:layout_constraintTop_toTopOf="@+id/textView_headers_info"
+                    android:background="@drawable/ic_add"/>
 
 
         </android.support.constraint.ConstraintLayout>
