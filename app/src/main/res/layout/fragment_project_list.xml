@@ -19,12 +19,21 @@
             android:layout_height="match_parent" android:id="@+id/constraintLayout_projectList"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_projects"
+        <android.support.v4.widget.SwipeRefreshLayout
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" android:id="@+id/refreshLayout_projects">
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_projects"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_add_project"
