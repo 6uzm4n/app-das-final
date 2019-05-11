@@ -1,8 +1,10 @@
 package com.example.appdasfinal.activities;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.*;
 import com.example.appdasfinal.utils.ErrorNotifier;
@@ -24,6 +27,9 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
     RequestFragment requestFragment;
     ResponseFragment responseFragment;
 
+    FloatingActionButton fabSend;
+    FloatingActionButton fabSave;
+
     private String id;
 
 
@@ -37,10 +43,10 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
             this.id = args.getString("id");
         }
 
-        FloatingActionButton fabSend = findViewById(R.id.floatingActionButton_send);
+        fabSend = findViewById(R.id.floatingActionButton_send);
         fabSend.setOnClickListener(v -> sendRequest());
 
-        FloatingActionButton fabSave = findViewById(R.id.floatingActionButton_save);
+        fabSave = findViewById(R.id.floatingActionButton_save);
         fabSave.setOnClickListener(v -> requestFragment.saveRequest());
 
         // Setting the tabs
@@ -48,9 +54,50 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
 
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                showButtons(i == 0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void showButtons(boolean show) {
+        if (!show) {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fabSave.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fabSave.setLayoutParams(p);
+            fabSave.setVisibility(View.GONE);
+
+            p = (CoordinatorLayout.LayoutParams) fabSend.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fabSend.setLayoutParams(p);
+            fabSend.setVisibility(View.GONE);
+        } else {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fabSave.getLayoutParams();
+            p.setAnchorId(R.id.view_pager);
+            fabSave.setLayoutParams(p);
+            fabSave.setVisibility(View.VISIBLE);
+
+            p = (CoordinatorLayout.LayoutParams) fabSend.getLayoutParams();
+            p.setAnchorId(R.id.view_pager);
+            fabSend.setLayoutParams(p);
+            fabSend.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
