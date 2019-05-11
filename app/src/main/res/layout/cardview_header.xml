@@ -20,8 +20,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_weight="1">
             <ImageView
+                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" app:srcCompat="@drawable/ic_remove"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    app:srcCompat="@drawable/ic_remove"
                     android:id="@+id/imageView_remove_header" android:layout_weight="0.85"
             />
             <EditText
