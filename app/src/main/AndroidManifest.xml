@@ -36,6 +36,7 @@
         <activity
             android:name=".activities.RequestActivity"
             android:label="@string/title_activity_request"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
