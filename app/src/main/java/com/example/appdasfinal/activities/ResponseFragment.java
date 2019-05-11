@@ -7,14 +7,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.appdasfinal.R;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -50,6 +57,16 @@ public class ResponseFragment extends Fragment {
         textViewCode = view.findViewById(R.id.textView_code);
 
         textViewHeaders = view.findViewById(R.id.textView_headers);
+        textViewHeaders.setHorizontallyScrolling(true);
+        textViewHeaders.setMovementMethod(new ScrollingMovementMethod());
+        textViewHeaders.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                textViewHeaders.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
         textViewHeadersTitle = view.findViewById(R.id.textView_headers_title);
         textViewHeadersTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +76,14 @@ public class ResponseFragment extends Fragment {
         });
 
         textViewBody = view.findViewById(R.id.textView_body);
+        textViewBody.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                textViewBody.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
         textViewBodyTitle = view.findViewById(R.id.textView_body_title);
         textViewBodyTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +95,8 @@ public class ResponseFragment extends Fragment {
         return view;
     }
 
-    private void toggleHeadersVisibility(){
-        if (textViewHeaders.getVisibility() == View.VISIBLE){
+    private void toggleHeadersVisibility() {
+        if (textViewHeaders.getVisibility() == View.VISIBLE) {
             textViewHeaders.setVisibility(View.GONE);
             textViewHeadersTitle.setCompoundDrawablesWithIntrinsicBounds(arrowUp, null, null, null);
         } else {
@@ -80,8 +105,8 @@ public class ResponseFragment extends Fragment {
         }
     }
 
-    private void toggleBodyVisibility(){
-        if (textViewBody.getVisibility() == View.VISIBLE){
+    private void toggleBodyVisibility() {
+        if (textViewBody.getVisibility() == View.VISIBLE) {
             textViewBody.setVisibility(View.GONE);
             textViewBodyTitle.setCompoundDrawablesWithIntrinsicBounds(arrowUp, null, null, null);
         } else {
@@ -92,7 +117,44 @@ public class ResponseFragment extends Fragment {
 
     public void setResponse(int statusCode, HashMap<String, String> headers, String response) {
         textViewCode.setText(Integer.toString(statusCode));
-        textViewHeaders.setText(headers.toString());
-        textViewBody.setText(response);
+        StringBuilder headersText = new StringBuilder();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            headersText.append(entry.getKey());
+            headersText.append(": ");
+            headersText.append(entry.getValue());
+            headersText.append("\n");
+        }
+        System.out.println(headersText.toString());
+        headersText.deleteCharAt(headersText.length() - 1);
+        textViewHeaders.setText(headersText.toString());
+
+        String responseText = response;
+        textViewBody.setHorizontallyScrolling(false);
+        String type = headers.get("Content-Type");
+        if (type != null) {
+            if (type.contains("application/json")) {
+                try {
+                    JSONObject responseJSON = new JSONObject(response);
+                    responseText = responseJSON.toString(2);
+                    textViewBody.setHorizontallyScrolling(true);
+                    textViewBody.setMovementMethod(new ScrollingMovementMethod());
+                } catch (JSONException e) {
+                    try {
+                        JSONArray responseJSON = new JSONArray(response);
+                        responseText = responseJSON.toString(2);
+                        textViewBody.setHorizontallyScrolling(true);
+                        textViewBody.setMovementMethod(new ScrollingMovementMethod());
+                    } catch (JSONException ignored) {
+                    }
+                }
+            } else if (type.contains("text/html")) {
+                Document doc = Jsoup.parse(response);
+                responseText = doc.html();
+                textViewBody.setHorizontallyScrolling(true);
+                textViewBody.setMovementMethod(new ScrollingMovementMethod());
+            }
+        }
+
+        textViewBody.setText(responseText);
     }
 }
