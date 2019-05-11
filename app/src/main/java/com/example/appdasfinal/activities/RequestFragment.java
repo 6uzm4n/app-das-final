@@ -36,6 +36,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     Spinner methodSpinner;
     LinearLayout headerList;
     TextView bodyTextView;
+    TextView bodyTitle;
 
 
     @Override
@@ -47,6 +48,25 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         methodSpinner = view.findViewById(R.id.spinner_method);
         headerList = view.findViewById(R.id.linearLayout_headers);
         bodyTextView = view.findViewById(R.id.editText_body);
+        bodyTitle = view.findViewById(R.id.textView_body_info);
+
+        methodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    bodyTextView.setVisibility(View.GONE);
+                    bodyTitle.setVisibility(View.GONE);
+                } else {
+                    bodyTextView.setVisibility(View.VISIBLE);
+                    bodyTitle.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Button button = view.findViewById(R.id.buttonAddHeader);
         button.setOnClickListener(v -> addHeaderCardView());
@@ -91,7 +111,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         }
 
         urlTextView.setText(this.url);
-
+        headerList.removeAllViews();
         for (int i = 0; i < methodSpinner.getCount(); i++) {
             if (methodSpinner.getItemAtPosition(i).toString().equals(this.method)) {
                 methodSpinner.setSelection(i);
@@ -114,7 +134,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             name = jsonRequest.getString("name");
 
             if (jsonRequest.isNull("url")) {
-                url = jsonRequest.getString("");
+                url = "";
             } else {
                 url = jsonRequest.getString("url");
             }
@@ -168,7 +188,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         if (getActivity() != null) {
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
-        showProgress(false);
+        onGetRequestSuccess(jsonRequest);
     }
 
     @Override
@@ -211,9 +231,6 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
     public String getCurrentBody() {
         // TODO: Cambiar si necesario
-        if (bodyTextView.getText().toString().equals("")) {
-            return null;
-        }
         return bodyTextView.getText().toString();
     }
 
