@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     JSONArray projects = new JSONArray();
     ProjectClickListener listener;
 
+    SwipeRefreshLayout refreshLayout;
     RecyclerView projectsRecycler;
     ProjectRVAdapter projectRVAdapter;
 
@@ -47,6 +49,8 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_project_list, container, false);
 
+        refreshLayout = view.findViewById(R.id.refreshLayout_projects);
+        refreshLayout.setOnRefreshListener(() -> ServerRequestHandler.getProjects(this));
         projectsRecycler = view.findViewById(R.id.recyclerview_projects);
 
         FloatingActionButton fab = view.findViewById(R.id.fab_add_project);
@@ -58,7 +62,7 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         fetchProjects();
     }
 
@@ -72,11 +76,13 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
         projects = jsonProjects;
         updateProjectList();
         showProgress(false);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onGetProjectsFailure(String message) {
         showProgress(false);
+        refreshLayout.setRefreshing(false);
         ErrorNotifier.notifyServerError(getView(), message);
     }
 
@@ -231,6 +237,7 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
     @Override
     public void onNoConnection() {
         showProgress(false);
+        refreshLayout.setRefreshing(false);
         ErrorNotifier.notifyInternetConnection(getView());
     }
 
