@@ -231,20 +231,36 @@ public class HTTPRequestSender {
 
         JSONObject data = new JSONObject();
         try {
-            data.put("name", requestName);
-            data.put("url", requestURL);
-            data.put("body", requestBody);
-            data.put("method", requestMethod);
-
-            JSONArray jsonRequestHeaders = new JSONArray();
-            for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
-                JSONObject jsonRequestHeader = new JSONObject();
-                jsonRequestHeader.put("key", entry.getKey());
-                jsonRequestHeader.put("value", entry.getValue());
-
-                jsonRequestHeaders.put(jsonRequestHeader);
+            if (requestName != null && !requestName.equals("")) {
+                data.put("name", requestName);
             }
-            data.put("headers", jsonRequestHeaders);
+
+            if (requestURL != null && !requestURL.equals("")) {
+                data.put("url", requestURL);
+            }
+
+            if (requestMethod != null && !requestMethod.equals("")) {
+                data.put("method", requestMethod);
+                if (requestMethod.toUpperCase().equals("GET")) {
+                    data.put("body", "");
+                } else {
+                    if (requestBody != null) {
+                        data.put("body", requestBody);
+                    }
+                }
+            }
+
+            if (requestHeaders != null) {
+                JSONArray jsonRequestHeaders = new JSONArray();
+                for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
+                    JSONObject jsonRequestHeader = new JSONObject();
+                    jsonRequestHeader.put("key", entry.getKey());
+                    jsonRequestHeader.put("value", entry.getValue());
+
+                    jsonRequestHeaders.put(jsonRequestHeader);
+                }
+                data.put("headers", jsonRequestHeaders);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

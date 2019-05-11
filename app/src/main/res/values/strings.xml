@@ -53,8 +53,8 @@
     <string name="request_headers_key_hint">Key</string>
     <string name="request_headers_value_hint">Value</string>
     <string-array name="request_method_list">
-        <item>GET</item>
         <item>POST</item>
+        <item>GET</item>
         <item>PUT</item>
         <item>DELETE</item>
     </string-array>

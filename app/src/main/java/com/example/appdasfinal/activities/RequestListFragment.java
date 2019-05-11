@@ -24,8 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 
 public class RequestListFragment extends Fragment implements ServerRequestHandlerListener, Loader {
 
@@ -229,25 +227,14 @@ public class RequestListFragment extends Fragment implements ServerRequestHandle
 
     private void renameRequest(JSONObject request, String newName) {
         String requestId = null;
-        String method = null;
-        String body = null;
-        String url = null;
-        HashMap<String, String> headers = new HashMap<>();
         try {
             requestId = request.getString("request_id");
-            url = request.getString("url");
-            body = request.getString("body");
-            method = request.getString("method");
-            JSONArray headersJSON = request.getJSONArray("headers");
-            for (int i = 0; i < headersJSON.length(); i++) {
-                headers.put(headersJSON.getJSONObject(i).getString("key"), headersJSON.getJSONObject(i).getString("value"));
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (Utils.requireNotNull(requestId, newName, url, body, method, headers)) {
+        if (Utils.requireNotNull(requestId, newName)) {
             showProgress(true);
-            ServerRequestHandler.updateRequest(requestId, newName, url, body, method, headers, this);
+            ServerRequestHandler.updateRequest(requestId, newName, null, null, null, null, this);
         }
     }
 

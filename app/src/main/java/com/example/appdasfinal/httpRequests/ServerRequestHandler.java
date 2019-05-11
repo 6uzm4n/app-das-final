@@ -551,6 +551,7 @@ public class ServerRequestHandler {
 
     /**
      * Tries to update the fields of a given request.
+     * Any null parameter will be ignored and not modified.
      * If successful, the response will contain information
      * about the request.
      * <p>
