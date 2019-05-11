@@ -57,7 +57,31 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
+        if (savedInstanceState != null) {
+            showProgress(true);
+
+            this.id = savedInstanceState.getString("id");
+            this.name = savedInstanceState.getString("name");
+            this.url = savedInstanceState.getString("url");
+            this.method = savedInstanceState.getString("method");
+            this.body = savedInstanceState.getString("body");
+            this.headers = new HashMap<>();
+
+            Bundle headersBundle = savedInstanceState.getBundle("headers");
+
+            String bundleKeyKey = "header_%d_key";
+            String bundleValueKey = "header_%d_value";
+
+            for (int i = 0; i < headersBundle.getInt("size"); i++) {
+                String headerKey = headersBundle.getString(String.format(bundleKeyKey, i));
+                String headerValue = headersBundle.getString(String.format(bundleValueKey, i));
+                this.headers.put(headerKey, headerValue);
+            }
+
+            setValues();
+
+            showProgress(false);
+        } else if (args != null) {
             this.id = args.getString("id");
             showProgress(true);
             ServerRequestHandler.getRequest(this.id, this);
@@ -73,6 +97,33 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         return cardView;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("id", this.id);
+        outState.putString("name", this.name);
+        outState.putString("url", this.getCurrentUrl());
+        outState.putString("method", this.getCurrentMethod());
+        outState.putString("body", this.getCurrentBody());
+
+        HashMap<String, String> headers = getHeaders();
+        Bundle headersBundle = new Bundle();
+        headersBundle.putInt("size", headers.size());
+        if (headers.size() > 0) {
+            String bundleKeyKey = "header_%d_key";
+            String bundleValueKey = "header_%d_value";
+            int i = 0;
+
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                headersBundle.putString(String.format(bundleKeyKey, i), entry.getKey());
+                headersBundle.putString(String.format(bundleValueKey, i), entry.getValue());
+                i++;
+            }
+
+        }
+        outState.putBundle("headers", headersBundle);
+    }
+
     private HashMap<String, String> getHeaders() {
         HashMap<String, String> headers = new HashMap<>();
         for (int i = 0; i < headerList.getChildCount(); i++) {
@@ -83,6 +134,44 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
         }
 
         return headers;
+    }
+
+    @Override
+    public void onGetRequestSuccess(JSONObject jsonRequest) {
+        try {
+            name = jsonRequest.getString("name");
+
+            if (jsonRequest.isNull("url")) {
+                url = jsonRequest.getString("");
+            } else {
+                url = jsonRequest.getString("url");
+            }
+
+            method = jsonRequest.getString("method");
+
+            if (jsonRequest.isNull("body")) {
+                body = "";
+            } else {
+                body = jsonRequest.getString("body");
+            }
+
+            JSONArray headersJson = jsonRequest.getJSONArray("headers");
+            headers = new HashMap<>();
+            for (int i = 0; i < headersJson.length(); i++) {
+                JSONObject header = headersJson.getJSONObject(i);
+                headers.put(header.getString("key"), header.getString("value"));
+            }
+            setValues();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        showProgress(false);
+    }
+
+    @Override
+    public void onGetRequestFailure(String message) {
+        showProgress(false);
+        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     private void setValues() {
@@ -101,47 +190,18 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
         bodyTextView.setText(this.body);
 
-        for (Map.Entry<String, String> entries : this.headers.entrySet()) {
+        headerList.removeAllViews();
+        System.out.println("FOOOOOOKING KIIIIIILL MEEEEEE");
+        System.out.println(this.headers.toString());
+        System.out.println("FOOOOOOKING KIIIIIILL MEEEEEE");
+        for (Map.Entry<String, String> entry : this.headers.entrySet()) {
             CardView headerCardView = addHeaderCardView();
-            ((TextView) headerCardView.findViewById(R.id.editText_header_key)).setText(entries.getKey());
-            ((TextView) headerCardView.findViewById(R.id.editText_header_value)).setText(entries.getValue());
+            TextView keyTextView = headerCardView.findViewById(R.id.editText_header_key);
+            TextView valueTextView = headerCardView.findViewById(R.id.editText_header_value);
+
+            keyTextView.setText(entry.getKey());
+            valueTextView.setText(entry.getValue());
         }
-    }
-
-    @Override
-    public void onGetRequestSuccess(JSONObject jsonRequest) {
-        try {
-            name = jsonRequest.getString("name");
-
-            if (jsonRequest.isNull("url")) {
-                url = jsonRequest.getString("");
-            } else {
-                url = jsonRequest.getString("url");
-            }
-
-            method = jsonRequest.getString("method");
-            if (jsonRequest.isNull("body")) {
-                body = "";
-            } else {
-                body = jsonRequest.getString("body");
-            }
-            JSONArray headersJson = jsonRequest.getJSONArray("headers");
-            headers = new HashMap<>();
-            for (int i = 0; i < headersJson.length(); i++) {
-                JSONObject header = headersJson.getJSONObject(i);
-                headers.put(header.getString("key"), header.getString("value"));
-            }
-            setValues();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        showProgress(false);
-    }
-
-    @Override
-    public void onGetRequestFailure(String message) {
-        showProgress(false);
-        ErrorNotifier.notifyServerError(getView(), message);
     }
 
     public void saveRequest() {
@@ -197,6 +257,14 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             return getView().findViewById(R.id.progressBar_requestFragment);
         }
         return null;
+    }
+
+    public String getRequestId() {
+        return this.id;
+    }
+
+    public String getRequestName() {
+        return name;
     }
 
     public String getCurrentMethod() {

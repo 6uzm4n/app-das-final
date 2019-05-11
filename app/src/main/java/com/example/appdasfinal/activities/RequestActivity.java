@@ -26,7 +26,6 @@ public class RequestActivity extends AppCompatActivity implements OnConnectionSu
 
     private String id;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
