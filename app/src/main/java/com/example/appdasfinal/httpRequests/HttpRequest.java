@@ -98,7 +98,7 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
         URL url = new URL(this.url);
 
         HttpURLConnection connection = (HttpURLConnection)
-                url.openConnection();
+                                               url.openConnection();
 
         connection.setReadTimeout(30000);
         connection.setConnectTimeout(30000);
@@ -106,7 +106,11 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
         // hashmap para poner las cabeceras
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
-                connection.setRequestProperty(entry.getKey(), entry.getValue());
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (key != null && !key.isEmpty() && value != null && !value.isEmpty()) {
+                    connection.setRequestProperty(entry.getKey(), entry.getValue());
+                }
             }
         }
 
