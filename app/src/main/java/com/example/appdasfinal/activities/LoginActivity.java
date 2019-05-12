@@ -13,6 +13,7 @@ import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
 import com.example.appdasfinal.utils.ErrorNotifier;
+import com.example.appdasfinal.utils.Utils;
 
 import java.util.Objects;
 
@@ -49,8 +50,11 @@ public class LoginActivity extends AppCompatActivity implements ServerRequestHan
 //        showProgress(false);
         inputEmail.setError("");
         if (token != null) {
+            String email = getEmail();
+            String pass = getPassword();
+            String authString = Utils.getBasicAuth(email, pass);
             SharedPreferences preferences = getSharedPreferences("session", MODE_PRIVATE);
-            preferences.edit().putString("session", token).apply();
+            preferences.edit().putString("auth", authString).apply();
             Intent i = new Intent(LoginActivity.this, ListActivity.class);
             startActivity(i);
             finish();

@@ -1,7 +1,6 @@
 package com.example.appdasfinal.httpRequests;
 
-import android.util.Base64;
-
+import com.example.appdasfinal.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,9 +59,9 @@ public class HTTPRequestSender {
         return this.serverToken;
     }
 
-    public HttpRequest.Builder login(String email, String password) {
+    public HttpRequest.Builder login(String authString) {
         HashMap<String, String> headers = new HashMap<>();
-        headers.put("Authorization", getBasicAuth(email, password));
+        headers.put("Authorization", authString);
 
         HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.setRequestMethod(HttpRequest.RequestMethod.GET)
@@ -71,10 +70,15 @@ public class HTTPRequestSender {
         return builder;
     }
 
-    private static String getBasicAuth(String email, String password) {
-        String authString = email + ":" + password;
-        byte[] authStringEnc = Base64.encode(authString.getBytes(), Base64.DEFAULT);
-        return "Basic " + new String(authStringEnc);
+    public HttpRequest.Builder login(String email, String password) {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", Utils.getBasicAuth(email, password));
+
+        HttpRequest.Builder builder = new HttpRequest.Builder();
+        builder.setRequestMethod(HttpRequest.RequestMethod.GET)
+                .setUrl(URL_LOGIN)
+                .setHeaders(headers);
+        return builder;
     }
 
     public HttpRequest.Builder register(String email, String password) {

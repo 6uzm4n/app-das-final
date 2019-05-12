@@ -150,7 +150,7 @@ public class ListActivity extends AppCompatActivity implements ProjectListFragme
 
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("session", MODE_PRIVATE);
-        sharedPreferences.edit().remove("session").apply();
+        sharedPreferences.edit().remove("auth").apply();
         Intent i = new Intent(ListActivity.this, LoginActivity.class);
         startActivity(i);
         finish();

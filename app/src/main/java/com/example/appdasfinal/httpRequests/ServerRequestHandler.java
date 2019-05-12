@@ -64,6 +64,49 @@ public class ServerRequestHandler {
         );
     }
 
+    public static void login(String authString, ServerRequestHandlerListener listener) {
+        login(authString, true, listener);
+    }
+
+    public static void login(String authString, boolean saveToken, ServerRequestHandlerListener listener) {
+        HTTPRequestSender.getInstance().login(authString).run(
+                new OnConnectionSuccess() {
+                    @Override
+                    public void onSuccess(int statusCode, String response, HashMap<String, String> headers) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String token = jsonResponse.getString("token");
+                            if (saveToken) {
+                                HTTPRequestSender.getInstance().setServerToken(token);
+                            }
+                            listener.onLoginSuccess(token);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onLoginFailure("Unexpected error");
+                        }
+                    }
+                },
+                new OnConnectionFailure() {
+                    @Override
+                    public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");
+                            listener.onLoginFailure(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onLoginFailure("Unexpected error");
+                        }
+                    }
+
+                    @Override
+                    public void onNoConnection() {
+                        listener.onNoConnection();
+                    }
+                }
+        );
+    }
+
     /**
      * Tries to register a new user.
      * If successful, the response will contain information
