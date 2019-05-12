@@ -1,6 +1,7 @@
 package com.example.appdasfinal.activities;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.example.appdasfinal.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,6 +49,7 @@ public class ResponseFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -59,38 +63,22 @@ public class ResponseFragment extends Fragment {
         textViewHeaders = view.findViewById(R.id.textView_headers);
         textViewHeaders.setHorizontallyScrolling(true);
         textViewHeaders.setMovementMethod(new ScrollingMovementMethod());
-        textViewHeaders.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                textViewHeaders.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        textViewHeaders.setOnTouchListener((v, event) -> {
+            textViewHeaders.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         textViewHeadersTitle = view.findViewById(R.id.textView_headers_title);
-        textViewHeadersTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleHeadersVisibility();
-            }
-        });
+        textViewHeadersTitle.setOnClickListener(v -> toggleHeadersVisibility());
 
         textViewBody = view.findViewById(R.id.textView_body);
-        textViewBody.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                textViewBody.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        textViewBody.setOnTouchListener((v, event) -> {
+            textViewBody.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         textViewBodyTitle = view.findViewById(R.id.textView_body_title);
-        textViewBodyTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleBodyVisibility();
-            }
-        });
+        textViewBodyTitle.setOnClickListener(v -> toggleBodyVisibility());
 
         return view;
     }
@@ -116,7 +104,7 @@ public class ResponseFragment extends Fragment {
     }
 
     public void setResponse(int statusCode, HashMap<String, String> headers, String response) {
-        textViewCode.setText(Integer.toString(statusCode));
+        textViewCode.setText(String.format(Locale.getDefault(), "%d", statusCode));
         StringBuilder headersText = new StringBuilder();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             headersText.append(entry.getKey());

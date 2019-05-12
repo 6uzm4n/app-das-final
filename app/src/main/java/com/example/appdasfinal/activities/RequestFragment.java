@@ -86,9 +86,7 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
 
     private CardView addHeaderCardView() {
         CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.cardview_header, null);
-        cardView.findViewById(R.id.imageView_remove_header).setOnClickListener(v2 -> {
-            headerList.removeView(cardView);
-        });
+        cardView.findViewById(R.id.imageView_remove_header).setOnClickListener(v2 -> headerList.removeView(cardView));
         headerList.addView(cardView);
         return cardView;
     }
@@ -220,22 +218,18 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
     }
 
     public String getCurrentMethod() {
-        // TODO: Cambiar si necesario
         return methodSpinner.getSelectedItem().toString();
     }
 
     public String getCurrentUrl() {
-        // TODO: Cambiar si necesario
         return urlTextView.getText().toString();
     }
 
     public String getCurrentBody() {
-        // TODO: Cambiar si necesario
         return bodyTextView.getText().toString();
     }
 
     public HashMap<String, String> getCurrentHeaders() {
-        // TODO: Cambiar si necesario
         return getHeaders();
     }
 }

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import android.widget.Toast;
+
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.ServerRequestHandler;
 import com.example.appdasfinal.httpRequests.ServerRequestHandlerListener;
@@ -67,10 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
     }
 
     private boolean validateRegister() {
-        if (!validateEmail() | !validatePassword() | !validatePassword2()) {
-            return false;
-        }
-        return true;
+        return !(!validateEmail() | !validatePassword() | !validatePassword2());
     }
 
     private boolean validateEmail() {
@@ -82,10 +80,6 @@ public class RegisterActivity extends AppCompatActivity implements ServerRequest
             return false;
         } else if (!email.matches(emailRegex)) {
             inputEmail.setError(getString(R.string.error_email_format));
-            return false;
-        } else if (false) {
-            // TODO: Validar si existe?
-            inputEmail.setError(getString(R.string.error_email_taken));
             return false;
         }
 

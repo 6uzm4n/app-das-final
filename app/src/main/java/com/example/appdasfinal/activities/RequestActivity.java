@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
 import com.example.appdasfinal.R;
 import com.example.appdasfinal.httpRequests.*;
 import com.example.appdasfinal.utils.ErrorNotifier;

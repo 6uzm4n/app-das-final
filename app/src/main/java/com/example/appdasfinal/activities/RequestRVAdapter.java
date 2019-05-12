@@ -20,6 +20,7 @@ public class RequestRVAdapter extends RecyclerView.Adapter<RequestRVAdapter.Proj
 
     public interface OnItemClickListener {
         void onItemClick(int pos);
+
         void onItemLongClick(int pos);
     }
 
@@ -68,31 +69,24 @@ public class RequestRVAdapter extends RecyclerView.Adapter<RequestRVAdapter.Proj
             requestName = view.findViewById(R.id.textView_request_name);
             requestMethod = view.findViewById(R.id.textView_request_method);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
+            view.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
                     }
                 }
             });
 
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemLongClick(position);
-                            return true;
-                        }
+            view.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemLongClick(position);
+                        return true;
                     }
-                    return false;
                 }
-
+                return false;
             });
         }
     }
