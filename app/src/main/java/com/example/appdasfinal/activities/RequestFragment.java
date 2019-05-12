@@ -97,7 +97,9 @@ public class RequestFragment extends Fragment implements ServerRequestHandlerLis
             CardView headerCardView = (CardView) headerList.getChildAt(i);
             String key = ((TextView) headerCardView.findViewById(R.id.editText_header_key)).getText().toString();
             String value = ((TextView) headerCardView.findViewById(R.id.editText_header_value)).getText().toString();
-            headers.put(key, value);
+            if (!key.isEmpty() && !value.isEmpty()) {
+                headers.put(key, value);
+            }
         }
 
         return headers;
