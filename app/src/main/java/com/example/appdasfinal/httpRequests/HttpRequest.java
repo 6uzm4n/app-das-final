@@ -37,7 +37,8 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
     private HashMap<String, String> headers;
     private String body;
 
-    private HttpRequest() { }
+    private HttpRequest() {
+    }
 
     @Override
     protected Object[] doInBackground(Void... voids) {
@@ -97,7 +98,7 @@ public class HttpRequest extends AsyncTask<Void, Void, Object[]> {
         URL url = new URL(this.url);
 
         HttpURLConnection connection = (HttpURLConnection)
-                                               url.openConnection();
+                url.openConnection();
 
         connection.setReadTimeout(30000);
         connection.setConnectTimeout(30000);

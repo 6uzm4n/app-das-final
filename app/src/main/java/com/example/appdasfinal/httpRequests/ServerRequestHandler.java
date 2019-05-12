@@ -100,8 +100,6 @@ public class ServerRequestHandler {
                 new OnConnectionFailure() {
                     @Override
                     public void onFailure(int statusCode, String response, HashMap<String, String> headers) {
-                        System.out.println(statusCode);
-                        System.out.println(response);
                         try {
                             // get the error message
                             JSONObject jsonResponse = new JSONObject(response);

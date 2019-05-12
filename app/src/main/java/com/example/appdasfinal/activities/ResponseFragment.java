@@ -112,7 +112,6 @@ public class ResponseFragment extends Fragment {
             headersText.append(entry.getValue());
             headersText.append("\n");
         }
-        System.out.println(headersText.toString());
         headersText.deleteCharAt(headersText.length() - 1);
         textViewHeaders.setText(headersText.toString());
 

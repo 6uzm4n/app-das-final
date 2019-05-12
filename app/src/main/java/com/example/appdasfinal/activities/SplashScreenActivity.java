@@ -19,21 +19,18 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         // Se comprueba si el usuario ya ha iniciado sesión y se le redirige a la actividad correspondiente después de unos segundos
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
-                String token = session.getString("session", null);
-                Intent i;
-                if (token == null) {
-                    i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                } else {
-                    HTTPRequestSender.getInstance().setServerToken(token);
-                    i = new Intent(SplashScreenActivity.this, ListActivity.class);
-                }
-                startActivity(i);
-                finish();
+        new Handler().postDelayed(() -> {
+            SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
+            String token = session.getString("session", null);
+            Intent i;
+            if (token == null) {
+                i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+            } else {
+                HTTPRequestSender.getInstance().setServerToken(token);
+                i = new Intent(SplashScreenActivity.this, ListActivity.class);
             }
+            startActivity(i);
+            finish();
         }, SPLASH_DURATION);
     }
 }

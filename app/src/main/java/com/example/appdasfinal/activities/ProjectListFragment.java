@@ -110,10 +110,6 @@ public class ProjectListFragment extends Fragment implements ServerRequestHandle
 
             @Override
             public void onItemLongClick(int pos) {
-                System.out.println("*************");
-                System.out.println(pos);
-                System.out.println(projects);
-                System.out.println("*************");
                 alertDialogAction(pos);
             }
 

@@ -1,6 +1,7 @@
 package com.example.appdasfinal.httpRequests;
 
 import android.util.Base64;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,8 @@ public class HTTPRequestSender {
 
     private static HTTPRequestSender instance = null;
 
-    private HTTPRequestSender() {}
+    private HTTPRequestSender() {
+    }
 
     public static HTTPRequestSender getInstance() {
         if (instance == null) {
